@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TipoVehiculo {
+  TERRESTRE
+  BLINDADO
+  AEREO
+  TRANSPORTE
+}
+
+model Departamento {
+  id          Int        @id @default(autoincrement())
+  nombre      String     @unique
+  descripcion String?
+  empleados   Empleado[]
+  vehiculos   Vehiculo[]
+
+  @@map("departamentos")
+}
+
+model Cargo {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique
+  nivel     Int        @unique // 1 = más bajo ... mayor número = más alto
+  empleados Empleado[]
+
+  @@map("cargos")
+}
+
+model Empleado {
+  id             Int          @id @default(autoincrement())
+  nombre         String
+  apellidos      String
+  alias          String?
+  email          String       @unique
+  salario        Decimal      @db.Decimal(10, 2)
+  fechaAlta      DateTime     @default(now())
+  activo         Boolean      @default(true)
+
+  departamentoId Int
+  departamento   Departamento @relation(fields: [departamentoId], references: [id])
+
+  cargoId        Int
+  cargo          Cargo        @relation(fields: [cargoId], references: [id])
+
+  @@index([departamentoId])
+  @@index([cargoId])
+  @@map("empleados")
+}
+
+model Vehiculo {
+  id             Int          @id @default(autoincrement())
+  matricula      String       @unique
+  marca          String       @default("Militech")
+  modelo         String
+  tipo           TipoVehiculo
+  operativo      Boolean      @default(true)
+
+  departamentoId Int
+  departamento   Departamento @relation(fields: [departamentoId], references: [id])
+
+  @@index([departamentoId])
+  @@map("vehiculos")
+}

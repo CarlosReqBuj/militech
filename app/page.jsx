@@ -1,4 +1,3 @@
-import Link from "next/link";
 import BotonGenerico from "@/components/botonGenerico";
 
 export default function Home() {

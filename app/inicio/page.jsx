@@ -1,4 +1,5 @@
 import Anterior from "@/components/botonFlechaAnterior";
+import BotonGenerico from "@/components/botonGenerico";
 
 export default function Inicio() {
     return (
@@ -10,55 +11,16 @@ export default function Inicio() {
                 <h1 className="text-6xl font-bold text-yellow-300">
                     Bienvenido a Militech
                 </h1>
-                <div className="flex flex-1 w-full justify-around">
-                    <button
-                        className="
-                        w-56
-                        h-20
-                        text-2xl
-                        bg-yellow-300
-                        hover:bg-yellow-200 
-                        rounded-lg 
-                        text-black 
-                        font-semibold 
-                        transition-all 
-                        duration-200 
-                        hover:shadow-lg hover:shadow-yellow-300/50 active:scale-90"
-                    >
+                <div className="flex flex-1 w-full items-center justify-around">
+                    <BotonGenerico href="/apartados/departamentos">
                         Acceder a Departamentos
-                    </button>
-                    <button
-                        className="
-                        w-56
-                        h-20
-                        text-2xl
-                        bg-yellow-300
-                        hover:bg-yellow-200 
-                        rounded-lg 
-                        text-black 
-                        font-semibold 
-                        transition-all 
-                        duration-200 
-                        hover:shadow-lg hover:shadow-yellow-300/50 active:scale-90"
-                    >
-                        Acceder a Empelados
-                    </button>
-                    <button
-                        className="
-                        w-56
-                        h-20
-                        text-2xl
-                        bg-yellow-300
-                        hover:bg-yellow-200 
-                        rounded-lg 
-                        text-black 
-                        font-semibold 
-                        transition-all 
-                        duration-200 
-                        hover:shadow-lg hover:shadow-yellow-300/50 active:scale-90"
-                    >
-                        Acceder a Vehiculos
-                    </button>
+                    </BotonGenerico>
+                    <BotonGenerico href="/apartados/empleados">
+                        Acceder a Empleados
+                    </BotonGenerico>
+                    <BotonGenerico href="/apartados/vehiculos">
+                        Acceder a Vehículos
+                    </BotonGenerico>
                 </div>
             </div>
         </div>

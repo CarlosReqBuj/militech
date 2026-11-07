@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BotonGenerico from "@/components/botonGenerico";
 
 export default function Home() {
     return (
@@ -19,24 +20,7 @@ export default function Home() {
                 >
                     Militech
                 </h1>
-                <Link href={"/inicio"}>
-                    <button
-                        className="
-                        w-48
-                        h-14
-                        text-2xl
-                        bg-yellow-300
-                        hover:bg-yellow-200 
-                        rounded-lg 
-                        text-black 
-                        font-semibold 
-                        transition-all 
-                        duration-200 
-                        hover:shadow-lg hover:shadow-yellow-300/50 active:scale-90"
-                    >
-                        Entrar
-                    </button>
-                </Link>
+                <BotonGenerico href="/inicio">Entrar</BotonGenerico>
             </div>
         </div>
     );

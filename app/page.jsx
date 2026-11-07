@@ -1,48 +1,43 @@
-import { prisma } from "@/lib/prisma";
-import { Suspense } from "react";
+import Link from "next/link";
 
 export default function Home() {
     return (
-        <div>
-            <h1 className="text-4xl p-6 text-yellow-300">Militech</h1>
-            <Suspense fallback={<p className="p-6">Cargando empleados...</p>}>
-                <EmpleadosPage />
-            </Suspense>
+        <div
+            className="
+            flex 
+            min-h-screen 
+            items-center 
+            justify-center"
+        >
+            <div className="flex flex-col items-center">
+                <h1
+                    className="
+                    text-8xl p-6 
+                    text-yellow-300 
+                    font 
+                    font-semibold"
+                >
+                    Militech
+                </h1>
+                <Link href={"/inicio"}>
+                    <button
+                        className="
+                        w-48
+                        h-14
+                        text-2xl
+                        bg-yellow-300
+                        hover:bg-yellow-200 
+                        rounded-lg 
+                        text-black 
+                        font-semibold 
+                        transition-all 
+                        duration-200 
+                        hover:shadow-lg hover:shadow-yellow-300/50 active:scale-90"
+                    >
+                        Entrar
+                    </button>
+                </Link>
+            </div>
         </div>
-    );
-}
-
-async function EmpleadosPage() {
-    const empleados = await prisma.empleado.findMany({
-        include: { cargo: true, departamento: true },
-        orderBy: { cargo: { nivel: "desc" } },
-    });
-
-    const vehiculos = await prisma.vehiculo.findMany({
-        include: { departamento: true },
-    });
-
-    return (
-        <>
-            <h1>Empleados</h1>
-            <ul>
-                {empleados.map((e) => (
-                    <li key={e.id}>
-                        {e.nombre} {e.apellidos} - {e.cargo.nombre} (
-                        {e.departamento.nombre})
-                    </li>
-                ))}
-            </ul>
-            <br />
-            <h1>Vehiculos</h1>
-            <ul>
-                {vehiculos.map((e) => (
-                    <li key={e.id}>
-                        {e.matricula} {e.marca} {e.modelo} {e.tipo}
-                        {e.operativo} ({e.departamento.nombre})
-                    </li>
-                ))}
-            </ul>
-        </>
     );
 }

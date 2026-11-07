@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, useState } from "react";
+import { Children, useState, useEffect } from "react";
 
 const claseFlecha =
     "w-12 h-12 shrink-0 flex items-center justify-center bg-yellow-300 hover:bg-yellow-200 rounded-full text-black transition-all duration-200 hover:shadow-lg hover:shadow-yellow-300/50 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:bg-yellow-300 disabled:active:scale-100";
@@ -10,9 +10,25 @@ export default function CarruselTarjetas({
     porPagina = 3,
     vacio = "No hay datos que mostrar.",
 }) {
+    const [mounted, setMounted] = useState(false);
     const [pagina, setPagina] = useState(0);
 
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     const tarjetas = Children.toArray(children);
+
+    // Evita el desajuste de hidratación renderizando un contenedor vacío o esqueleto mientras monta en el cliente
+    if (!mounted) {
+        return (
+            <section className="flex w-full flex-col gap-6 rounded-xl border-4 border-yellow-300 bg-zinc-900 p-6 min-h-[300px]">
+                <div className="flex w-full items-center justify-center">
+                    <p className="text-yellow-300">Cargando carrusel...</p>
+                </div>
+            </section>
+        );
+    }
 
     const totalPaginas = Math.max(1, Math.ceil(tarjetas.length / porPagina));
 

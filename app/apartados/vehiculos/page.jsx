@@ -37,7 +37,14 @@ async function ListaVehiculos() {
     const vehiculos = await prisma.vehiculo.findMany({
         include: {
             departamento: true,
-            empleados: true, // Relación muchos a muchos con empleados
+            empleados: {
+                select: {
+                    id: true,
+                    nombre: true,
+                    apellidos: true,
+                    email: true,
+                },
+            },
         },
         orderBy: [{ tipo: "asc" }, { modelo: "asc" }],
     });

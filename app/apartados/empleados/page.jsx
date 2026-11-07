@@ -38,7 +38,15 @@ async function ListaEmpleados() {
         include: {
             departamento: true,
             cargo: true,
-            vehiculos: true, // Relación muchos a muchos simétrica con vehículos
+            vehiculos: {
+                select: {
+                    id: true,
+                    marca: true,
+                    modelo: true,
+                    matricula: true,
+                    tipo: true,
+                },
+            },
         },
         orderBy: [{ apellidos: "asc" }, { nombre: "asc" }],
     });

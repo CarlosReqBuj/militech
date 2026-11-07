@@ -23,5 +23,9 @@ async function ListaVehiculos() {
         },
     });
 
-    return <p className="mt-5 text-yellow-300">{JSON.stringify(vehiculos)}</p>;
+    return (
+        <p className="mt-5 text-yellow-300 whitespace-pre-wrap">
+            {JSON.stringify(vehiculos, null, 2)}
+        </p>
+    );
 }

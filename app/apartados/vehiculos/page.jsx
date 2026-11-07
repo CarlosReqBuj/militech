@@ -45,6 +45,8 @@ async function ListaVehiculos() {
         orderBy: [{ tipo: "asc" }, { modelo: "asc" }],
     });
 
+    console.log(vehiculos);
+
     return (
         <CarruselTarjetas porPagina={3}>
             {vehiculos.map((v) => (

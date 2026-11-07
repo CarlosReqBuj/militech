@@ -13,6 +13,8 @@ export default function Vehiculos() {
 }
 
 async function ListaVehiculos() {
+    await connection();
+
     const vehiculos = await prisma.vehiculo.findMany({
         include: { departamento: true, empleados: true },
         orderBy: [{ tipo: "asc" }, { modelo: "asc" }],

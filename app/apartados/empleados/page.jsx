@@ -13,6 +13,8 @@ export default function Empleados() {
 }
 
 async function ListaEmpleados() {
+    await connection();
+
     const empleados = await prisma.empleado.findMany({
         include: { cargo: true, departamento: true, vehiculos: true },
         orderBy: { cargo: { nivel: "desc" } },

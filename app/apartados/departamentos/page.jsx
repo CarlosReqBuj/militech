@@ -13,6 +13,8 @@ export default function Departamentos() {
 }
 
 async function ListaDepartamentos() {
+    await connection();
+
     const departamentos = await prisma.departamento.findMany();
 
     return (

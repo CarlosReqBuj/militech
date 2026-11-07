@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 import { connection } from "next/server";
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
@@ -35,6 +38,8 @@ export default function Vehiculos() {
 }
 
 async function ListaVehiculos() {
+    await connection();
+
     const vehiculos = await prisma.vehiculo.findMany({
         include: {
             departamento: true,
@@ -52,7 +57,7 @@ async function ListaVehiculos() {
                     subtitulo={v.matricula}
                     etiqueta="Vehículo"
                     detalles={[
-                        { etiqueta: "Tipo", valor: String(v.tipo) }, // <-- Forzar a String aquí
+                        { etiqueta: "Tipo", valor: String(v.tipo) },
                         {
                             etiqueta: "Estado",
                             valor: v.operativo ? "Operativo" : "No operativo",

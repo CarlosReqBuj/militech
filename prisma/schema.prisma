@@ -48,7 +48,7 @@ model Empleado {
   cargoId        Int
   cargo          Cargo        @relation(fields: [cargoId], references: [id])
 
-  vehiculos Vehiculo[]
+  vehiculos      Vehiculo[]   @relation("EmpleadoVehiculos")
 
   @@index([departamentoId])
   @@index([cargoId])
@@ -66,7 +66,7 @@ model Vehiculo {
   departamentoId Int
   departamento   Departamento @relation(fields: [departamentoId], references: [id])
 
-  empleados Empleado[]
+  empleados Empleado[] @relation("EmpleadoVehiculos")
 
   @@index([departamentoId])
   @@map("vehiculos")

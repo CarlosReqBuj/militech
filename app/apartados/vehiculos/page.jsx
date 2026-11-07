@@ -61,7 +61,7 @@ async function ListaVehiculos() {
                         },
                         {
                             etiqueta: "Departamento",
-                            valor: v.departamento.nombre,
+                            valor: v.departamento?.nombre ?? "Sin departamento",
                         },
                         {
                             etiqueta: "Empleados con acceso",

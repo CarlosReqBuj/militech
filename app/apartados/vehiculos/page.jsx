@@ -37,8 +37,6 @@ export default function Vehiculos() {
 async function ListaVehiculos() {
     await connection();
 
-    console.log("aaa");
-
     const vehiculos = await prisma.vehiculo.findMany({
         include: {
             departamento: true,
@@ -46,8 +44,6 @@ async function ListaVehiculos() {
         },
         orderBy: [{ tipo: "asc" }, { modelo: "asc" }],
     });
-
-    console.log("bbb");
 
     return (
         <CarruselTarjetas porPagina={3}>
@@ -58,7 +54,7 @@ async function ListaVehiculos() {
                     subtitulo={v.matricula}
                     etiqueta="Vehículo"
                     detalles={[
-                        { etiqueta: "Tipo", valor: v.tipo },
+                        { etiqueta: "Tipo", valor: String(v.tipo) }, // <-- Forzar a String aquí
                         {
                             etiqueta: "Estado",
                             valor: v.operativo ? "Operativo" : "No operativo",

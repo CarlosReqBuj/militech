@@ -34,22 +34,7 @@ export default function Empleados() {
 async function ListaEmpleados() {
     await connection();
 
-    const empleados = await prisma.empleado.findMany({
-        include: {
-            departamento: true,
-            cargo: true,
-            vehiculos: {
-                select: {
-                    id: true,
-                    marca: true,
-                    modelo: true,
-                    matricula: true,
-                    tipo: true,
-                },
-            },
-        },
-        orderBy: [{ apellidos: "asc" }, { nombre: "asc" }],
-    });
+    const empleados = await prisma.empleado.findMany({});
 
     const dataSegura = JSON.parse(JSON.stringify(empleados));
 

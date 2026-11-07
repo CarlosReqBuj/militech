@@ -34,20 +34,7 @@ export default function Vehiculos() {
 async function ListaVehiculos() {
     await connection();
 
-    const vehiculos = await prisma.vehiculo.findMany({
-        include: {
-            departamento: true,
-            empleados: {
-                select: {
-                    id: true,
-                    nombre: true,
-                    apellidos: true,
-                    email: true,
-                },
-            },
-        },
-        orderBy: [{ tipo: "asc" }, { modelo: "asc" }],
-    });
+    const vehiculos = await prisma.vehiculo.findMany({});
 
     const dataSegura = JSON.parse(JSON.stringify(vehiculos));
 

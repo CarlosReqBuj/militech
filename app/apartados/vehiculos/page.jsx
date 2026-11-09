@@ -2,6 +2,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import Anterior from "@/components/botonFlechaAnterior";
+import MensajeFlotante from "@/components/mensajeFlotante";
 
 export default function Vehiculos() {
     return (
@@ -43,8 +44,11 @@ async function ListaVehiculos() {
     });
 
     return (
-        <p className="mt-5 text-yellow-300 whitespace-pre-wrap font-mono text-sm bg-zinc-900 p-4 rounded-lg border border-yellow-300/30">
-            {JSON.stringify(vehiculos, null, 2)}
-        </p>
+        <>
+            <p className="mt-5 text-yellow-300 whitespace-pre-wrap font-mono text-sm bg-zinc-900 p-4 rounded-lg border border-yellow-300/30">
+                {JSON.stringify(vehiculos, null, 2)}
+            </p>
+            <MensajeFlotante mensaje="¡¡Exito vehiculos obtenidos!!"></MensajeFlotante>
+        </>
     );
 }

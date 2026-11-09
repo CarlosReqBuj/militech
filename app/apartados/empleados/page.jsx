@@ -34,13 +34,69 @@ export default function Empleados() {
 async function ListaEmpleados() {
     await connection();
 
-    const empleados = await prisma.empleado.findMany({});
+    let empleados;
+    try {
+        empleados = await prisma.empleado.findMany({
+            include: {
+                cargo: true,
+                vehiculos: true,
+            },
+            orderBy: { apellidos: "asc" },
+        });
+    } catch (error) {
+        return (
+            <div className="rounded-lg border border-red-500/50 bg-red-950/40 p-4 font-mono text-sm text-red-300">
+                <p className="mb-2 font-bold">
+                    Error al consultar la base de datos
+                </p>
+                <p className="whitespace-pre-wrap">
+                    {error.code} {error.message}
+                </p>
+            </div>
+        );
+    }
 
-    const dataSegura = JSON.parse(JSON.stringify(empleados));
+    if (empleados.length === 0) {
+        return (
+            <p className="text-center text-yellow-300/70">
+                No hay empleados todavía.
+            </p>
+        );
+    }
 
     return (
-        <p className="mt-5 text-yellow-300 whitespace-pre-wrap font-mono text-sm bg-zinc-900 p-4 rounded-lg border border-yellow-300/30">
-            {JSON.stringify(dataSegura, null, 2)}
-        </p>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {empleados.map((e) => (
+                <div
+                    key={e.id}
+                    className="rounded-lg border border-yellow-300/30 bg-zinc-900 p-4 text-yellow-100"
+                >
+                    <p className="text-lg font-bold text-yellow-300">
+                        {e.nombre} {e.apellidos}
+                    </p>
+                    <p className="text-sm text-yellow-100/60">
+                        {e.cargo.nombre}
+                    </p>
+
+                    <p className="mt-3 text-xs uppercase tracking-wide text-yellow-300/70">
+                        Vehículos ({e.vehiculos.length})
+                    </p>
+                    {e.vehiculos.length === 0 ? (
+                        <p className="text-sm text-yellow-100/50">Ninguno</p>
+                    ) : (
+                        <ul className="text-sm">
+                            {e.vehiculos.map((v) => (
+                                <li key={v.id}>
+                                    {v.modelo}{" "}
+                                    <span className="text-yellow-100/50">
+                                        ({v.matricula})
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            ))}
+        </div>
     );
 }

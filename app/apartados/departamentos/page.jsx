@@ -23,7 +23,7 @@ export default function Departamentos() {
                             </p>
                         }
                     >
-                        <ListaEmpleados />
+                        <ListaDepartamentos />
                     </Suspense>
                 </div>
             </div>

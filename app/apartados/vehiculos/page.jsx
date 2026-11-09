@@ -34,13 +34,17 @@ export default function Vehiculos() {
 async function ListaVehiculos() {
     await connection();
 
-    const vehiculos = await prisma.vehiculo.findMany({});
-
-    const dataSegura = JSON.parse(JSON.stringify(vehiculos));
+    const vehiculos = await prisma.vehiculo.findMany({
+        include: {
+            cargo: true,
+            empleados: true,
+        },
+        orderBy: { matricula: "asc" },
+    });
 
     return (
         <p className="mt-5 text-yellow-300 whitespace-pre-wrap font-mono text-sm bg-zinc-900 p-4 rounded-lg border border-yellow-300/30">
-            {JSON.stringify(dataSegura, null, 2)}
+            {JSON.stringify(vehiculos, null, 2)}
         </p>
     );
 }

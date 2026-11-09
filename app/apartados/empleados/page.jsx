@@ -1,8 +1,9 @@
 import { connection } from "next/server";
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
-import Anterior from "@/components/botonFlechaAnterior";
-import MensajeFlotante from "@/components/mensajeFlotante";
+import Anterior from "@/components/BotonFlechaAnterior";
+import { List } from "@/components/simpleui";
+import { CardEmpleado } from "@/components/CardEmpleado";
 
 export default function Empleados() {
     return (
@@ -35,20 +36,29 @@ export default function Empleados() {
 async function ListaEmpleados() {
     await connection();
 
-    let empleados = await prisma.empleado.findMany({
-        include: {
-            cargo: true,
-            vehiculos: true,
-        },
-        orderBy: { apellidos: "asc" },
-    });
+    const empleadosDB = await prisma.empleado.findMany({});
+
+    const empleados = empleadosDB.map((e) => ({
+        ...e,
+        salario: e.salario.toNumber(),
+    }));
 
     return (
         <>
-            <p className="mt-5 text-yellow-300 whitespace-pre-wrap font-mono text-sm bg-zinc-900 p-4 rounded-lg border border-yellow-300/30">
-                {JSON.stringify(empleados, null, 2)}
-            </p>
-            <MensajeFlotante mensaje="¡¡Exito empleados obtenidos!!"></MensajeFlotante>
+            <List
+                card={CardEmpleado}
+                data={empleados}
+                columns={[
+                    { name: "nombre", label: "Nombre" },
+                    { name: "apellido", label: "Apellido" },
+                    { name: "alias", label: "Alias" },
+                    { name: "email", label: "Email" },
+                ]}
+                sort="nombre"
+                direction="asc"
+            >
+                <div className="text-xl font-bold">Lista empleados</div>
+            </List>
         </>
     );
 }

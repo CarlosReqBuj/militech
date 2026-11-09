@@ -1,5 +1,5 @@
-import Anterior from "@/components/botonFlechaAnterior";
-import BotonGenerico from "@/components/botonGenerico";
+import Anterior from "@/components/BotonFlechaAnterior";
+import BotonGenerico from "@/components/BotonGenerico";
 
 export default function Inicio() {
     return (

@@ -1,8 +1,8 @@
-import { connection } from "next/server";
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
-import Anterior from "@/components/botonFlechaAnterior";
-import MensajeFlotante from "@/components/mensajeFlotante";
+import Anterior from "@/components/BotonFlechaAnterior";
+import { List } from "@/components/simpleui";
+import { CardDepartamento } from "@/components/CardDepartamento";
 
 export default function Departamentos() {
     return (
@@ -33,21 +33,19 @@ export default function Departamentos() {
 }
 
 async function ListaDepartamentos() {
-    await connection();
-
-    const departamentos = await prisma.departamento.findMany({
-        include: {
-            empleados: true,
-            vehiculos: true,
-        },
-    });
+    const departamentos = await prisma.departamento.findMany({});
 
     return (
         <>
-            <p className="mt-5 text-yellow-300 whitespace-pre-wrap font-mono text-sm bg-zinc-900 p-4 rounded-lg border border-yellow-300/30">
-                {JSON.stringify(departamentos, null, 2)}
-            </p>
-            <MensajeFlotante mensaje="¡¡Exito departamentos obtenidos!!"></MensajeFlotante>
+            <List
+                card={CardDepartamento}
+                data={departamentos}
+                columns={[{ name: "nombre", label: "Nombre" }]}
+                sort="nombre"
+                direction="asc"
+            >
+                <div className="text-xl font-bold">Lista departamentos</div>
+            </List>
         </>
     );
 }

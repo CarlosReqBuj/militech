@@ -1,4 +1,4 @@
-import BotonGenerico from "@/components/botonGenerico";
+import BotonGenerico from "@/components/BotonGenerico";
 
 export default function Home() {
     return (

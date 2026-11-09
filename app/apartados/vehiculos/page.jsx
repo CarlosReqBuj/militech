@@ -1,8 +1,9 @@
 import { connection } from "next/server";
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
-import Anterior from "@/components/botonFlechaAnterior";
-import MensajeFlotante from "@/components/mensajeFlotante";
+import Anterior from "@/components/BotonFlechaAnterior";
+import { CardVehiculo } from "@/components/CardVehiculo";
+import { List } from "@/components/simpleui";
 
 export default function Vehiculos() {
     return (
@@ -35,20 +36,23 @@ export default function Vehiculos() {
 async function ListaVehiculos() {
     await connection();
 
-    const vehiculos = await prisma.vehiculo.findMany({
-        include: {
-            departamento: true,
-            empleados: true,
-        },
-        orderBy: { matricula: "asc" },
-    });
+    const vehiculos = await prisma.vehiculo.findMany({});
 
     return (
         <>
-            <p className="mt-5 text-yellow-300 whitespace-pre-wrap font-mono text-sm bg-zinc-900 p-4 rounded-lg border border-yellow-300/30">
-                {JSON.stringify(vehiculos, null, 2)}
-            </p>
-            <MensajeFlotante mensaje="¡¡Exito vehiculos obtenidos!!"></MensajeFlotante>
+            <List
+                card={CardVehiculo}
+                data={vehiculos}
+                columns={[
+                    { name: "matricula", label: "Matricula" },
+                    { name: "marca", label: "Marca" },
+                    { name: "modelo", label: "Modelo" },
+                ]}
+                sort="matricula"
+                direction="asc"
+            >
+                <div className="text-xl font-bold">Lista empleados</div>
+            </List>
         </>
     );
 }

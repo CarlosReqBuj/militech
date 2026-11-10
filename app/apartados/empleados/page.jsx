@@ -7,7 +7,7 @@ import { CardEmpleado } from "@/components/CardEmpleado";
 
 export default function Empleados() {
     return (
-        <main className="min-h-screen bg-zinc-950 p-5">
+        <main className="min-h-screen bg-transparent p-5">
             <div className="relative flex min-h-[90vh] flex-col items-center gap-10 rounded-xl border-4 border-yellow-300 p-8">
                 <div className="absolute left-6 top-6">
                     <Anterior />

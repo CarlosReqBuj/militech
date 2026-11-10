@@ -5,17 +5,23 @@ export default function Home() {
         <div
             className="
             flex 
-            min-h-screen 
+            min-h-dvh 
             items-center 
-            justify-center"
+            justify-center 
+            px-4"
         >
             <div className="flex flex-col items-center">
                 <h1
                     className="
-                    text-8xl p-6 
+                    text-5xl 
+                    sm:text-7xl 
+                    lg:text-8xl 
+                    p-4 
+                    sm:p-6 
                     text-yellow-300 
-                    font 
-                    font-semibold"
+                    font-semibold 
+                    text-center 
+                    break-words"
                 >
                     Militech
                 </h1>

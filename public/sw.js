@@ -1,6 +1,11 @@
 const CACHE_NAME = "militech-static-v1";
 
-const STATIC_ASSETS = ["/manifest.webmanifest"];
+const STATIC_ASSETS = [
+    "/manifest.webmanifest",
+    "/offline",
+    "/icon-192.png",
+    "/icon-512.png",
+];
 
 // Instalación
 self.addEventListener("install", (event) => {
@@ -10,7 +15,7 @@ self.addEventListener("install", (event) => {
         }),
     );
 
-    self.skipWaiting();
+    event.waitUntil(self.skipWaiting());
 });
 
 // Activación
@@ -27,7 +32,7 @@ self.addEventListener("activate", (event) => {
             ),
     );
 
-    self.clients.claim();
+    event.waitUntil(self.clients.claim());
 });
 
 // Peticiones

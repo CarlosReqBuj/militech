@@ -24,8 +24,8 @@ export const metadata = {
         title: "Militech",
     },
     icons: {
-        icon: "/icons/icon-192.png",
-        apple: "/icons/icon-192.png",
+        icon: "/icon-192.png",
+        apple: "/icon-192.png",
     },
 };
 

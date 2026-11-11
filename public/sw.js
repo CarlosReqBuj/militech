@@ -1,6 +1,6 @@
 const CACHE_NAME = "militech-static-v1";
 
-const STATIC_ASSETS = ["/offline", "/manifest.webmanifest"];
+const STATIC_ASSETS = ["/manifest.webmanifest"];
 
 // Instalación
 self.addEventListener("install", (event) => {

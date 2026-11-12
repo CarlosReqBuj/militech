@@ -17,7 +17,7 @@ export default async function ListaEmpleados() {
                 data={empleados}
                 columns={[
                     { name: "nombre", label: "Nombre" },
-                    { name: "apellido", label: "Apellido" },
+                    { name: "apellidos", label: "Apellidos" },
                     { name: "alias", label: "Alias" },
                     { name: "email", label: "Email" },
                 ]}

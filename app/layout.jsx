@@ -18,14 +18,22 @@ export const metadata = {
     description: "Panel de gestión corporativa",
     manifest: "/manifest.webmanifest?v=0.1",
     applicationName: "Militech",
+
     appleWebApp: {
         capable: true,
         statusBarStyle: "black-translucent",
         title: "Militech",
     },
+
     icons: {
         icon: "/icon-192.png",
-        apple: "/icon-192.png",
+        apple: [
+            {
+                url: "/icon-192.png",
+                sizes: "192x192",
+                type: "image/png",
+            },
+        ],
     },
 };
 

@@ -34,8 +34,7 @@ export default function Vehiculos() {
                     lg:text-5xl 
                     font-bold 
                     text-yellow-300 
-                    text-center 
-                    break-words"
+                    text-center"
                 >
                     Vehículos
                 </h1>

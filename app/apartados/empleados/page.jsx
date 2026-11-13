@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
 import ListaEmpleados from "@/components/ListaEmpleados";
+import { prisma } from "@/lib/prisma";
 
 export default function Empleados() {
     return (

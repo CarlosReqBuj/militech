@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
 import ListaEmpleados from "@/components/ListaEmpleados";
 import ListaVehiculos from "@/components/ListaVehiculos";
+import { prisma } from "@/lib/prisma";
 
 export default function Page({ params }) {
     return (

@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
 import ListaEmpleados from "@/components/ListaEmpleados";
-import { prisma } from "@/lib/prisma";
 
 export default function Empleados() {
     return (
@@ -35,8 +34,7 @@ export default function Empleados() {
                     lg:text-5xl 
                     font-bold 
                     text-yellow-300 
-                    text-center 
-                    break-words"
+                    text-center"
                 >
                     Empleados
                 </h1>

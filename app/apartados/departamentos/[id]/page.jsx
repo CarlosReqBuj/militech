@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
+import ListaEmpleados from "@/components/ListaEmpleados";
+import ListaVehiculos from "@/components/ListaVehiculos";
 
 export default function Page({ params }) {
     return (
@@ -57,12 +59,58 @@ export default function Page({ params }) {
 
 async function InfoDepartamento({ params }) {
     const { id } = await params;
+    const departamentoId = Number(id);
+
+    const departamento = await prisma.departamento.findUnique({
+        where: { id: departamentoId },
+    });
+
+    if (!departamento) {
+        return (
+            <p className="text-center text-yellow-300">
+                Departamento no encontrado
+            </p>
+        );
+    }
+
+    const { nombre, descripcion } = departamento;
 
     return (
-        <div>
-            <h2 className="text-center text-lg sm:text-2xl text-yellow-300 break-all">
-                ID: {id}
-            </h2>
+        <div className="flex w-full flex-col gap-6 sm:gap-8">
+            <div className="text-center sm:text-left">
+                <h2 className="text-center text-xl sm:text-3xl font-bold text-yellow-300 break-words">
+                    {nombre}
+                </h2>
+                <p className="text-center mt-2 text-sm sm:text-base text-gray-300 break-words">
+                    {descripcion}
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+                <section className="min-w-0 overflow-x-auto rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                    <Suspense
+                        fallback={
+                            <p className="text-center text-yellow-300">
+                                Cargando empleados...
+                            </p>
+                        }
+                    >
+                        <ListaEmpleados departamentoId={departamentoId} />
+                    </Suspense>
+                </section>
+
+                <section className="min-w-0 overflow-x-auto rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                    <Suspense
+                        fallback={
+                            <p className="text-center text-yellow-300">
+                                Cargando vehículos...
+                            </p>
+                        }
+                    >
+                        <ListaVehiculos departamentoId={departamentoId} />
+                    </Suspense>
+                </section>
+            </div>
         </div>
     );
 }

@@ -1,5 +1,8 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
+import { prisma } from "@/lib/prisma";
+import ListaEmpleados from "@/components/ListaEmpleados";
+import { CardDepartamento } from "@/components/CardDepartamento";
 
 export default function Page({ params }) {
     return (
@@ -33,8 +36,7 @@ export default function Page({ params }) {
                     lg:text-5xl 
                     font-bold 
                     text-yellow-300 
-                    text-center 
-                    break-words"
+                    text-center"
                 >
                     Vehiculo
                 </h1>
@@ -57,12 +59,66 @@ export default function Page({ params }) {
 
 async function InfoVehiculo({ params }) {
     const { id } = await params;
+    const vehiculoId = Number(id);
+
+    const vehiculo = await prisma.vehiculo.findUnique({
+        where: { id: vehiculoId },
+        include: { departamento: true },
+    });
+
+    if (!vehiculo) {
+        return (
+            <p className="text-center text-yellow-300">
+                Vehículo no encontrado
+            </p>
+        );
+    }
+
+    const { matricula, marca, modelo, tipo, operativo, departamento } =
+        vehiculo;
 
     return (
-        <div>
-            <h2 className="text-center text-lg sm:text-2xl text-yellow-300 break-all">
-                ID: {id}
-            </h2>
+        <div className="flex w-full flex-col gap-6 sm:gap-8">
+            <div>
+                <section className="self-start min-w-0 rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                    <h2 className="text-xl sm:text-3xl font-bold text-yellow-300">
+                        {matricula}
+                    </h2>
+                    <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        Marca: {marca}
+                    </p>
+                    <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        Modelo: {modelo}
+                    </p>
+                    <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        Tipo: {tipo}
+                    </p>
+                    <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        Estado: {operativo ? "operativo " : "no disponible"}
+                    </p>
+                </section>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 lg:gap-8">
+                <section className="self-start min-w-0 rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                    <div className="mb-4 text-xl font-bold text-yellow-300">
+                        Departamento
+                    </div>
+                    <CardDepartamento data={departamento} />
+                </section>
+
+                <section className="min-w-0 overflow-x-auto rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                    <Suspense
+                        fallback={
+                            <p className="text-center text-yellow-300">
+                                Cargando empleados...
+                            </p>
+                        }
+                    >
+                        <ListaEmpleados vehiculoId={vehiculoId} />
+                    </Suspense>
+                </section>
+            </div>
         </div>
     );
 }

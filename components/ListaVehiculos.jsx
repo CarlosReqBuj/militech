@@ -2,8 +2,13 @@ import { prisma } from "@/lib/prisma";
 import { CardVehiculo } from "@/components/CardVehiculo";
 import { List } from "@/components/simpleui";
 
-export default async function ListaVehiculos() {
-    const vehiculos = await prisma.vehiculo.findMany({});
+export default async function ListaVehiculos({ departamentoId, empleadoId }) {
+    const vehiculos = await prisma.vehiculo.findMany({
+        where: {
+            departamentoId,
+            empleados: empleadoId ? { some: { id: empleadoId } } : undefined,
+        },
+    });
 
     return (
         <>
@@ -18,7 +23,7 @@ export default async function ListaVehiculos() {
                 sort="matricula"
                 direction="asc"
             >
-                <div className="text-xl font-bold">Lista empleados</div>
+                <div className="text-xl font-bold">Lista vehiculos</div>
             </List>
         </>
     );

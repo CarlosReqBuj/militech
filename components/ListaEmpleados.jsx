@@ -2,8 +2,13 @@ import { prisma } from "@/lib/prisma";
 import { List } from "@/components/simpleui";
 import { CardEmpleado } from "@/components/CardEmpleado";
 
-export default async function ListaEmpleados() {
-    const empleadosDB = await prisma.empleado.findMany({});
+export default async function ListaEmpleados({ departamentoId, vehiculoId }) {
+    const empleadosDB = await prisma.empleado.findMany({
+        where: {
+            departamentoId,
+            vehiculos: vehiculoId ? { some: { id: vehiculoId } } : undefined,
+        },
+    });
 
     const empleados = empleadosDB.map((e) => ({
         ...e,

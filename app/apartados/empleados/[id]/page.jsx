@@ -1,5 +1,8 @@
 import { Suspense } from "react";
+import { prisma } from "@/lib/prisma";
 import Anterior from "@/components/BotonFlechaAnterior";
+import ListaVehiculos from "@/components/ListaVehiculos";
+import { CardDepartamento } from "@/components/CardDepartamento";
 
 export default function Page({ params }) {
     return (
@@ -33,8 +36,7 @@ export default function Page({ params }) {
                     lg:text-5xl 
                     font-bold 
                     text-yellow-300 
-                    text-center 
-                    break-words"
+                    text-center"
                 >
                     Empleado
                 </h1>
@@ -57,12 +59,81 @@ export default function Page({ params }) {
 
 async function InfoEmpleado({ params }) {
     const { id } = await params;
+    const empleadoId = Number(id);
+
+    const empleado = await prisma.empleado.findUnique({
+        where: { id: empleadoId },
+        include: { departamento: true, cargo: true },
+    });
+
+    if (!empleado) {
+        return (
+            <p className="text-center text-yellow-300">
+                Empleado no encontrado
+            </p>
+        );
+    }
+
+    const {
+        nombre,
+        apellidos,
+        alias,
+        email,
+        departamento,
+        salario,
+        fechaAlta,
+        activo,
+        cargo,
+    } = empleado;
 
     return (
-        <div>
-            <h2 className="text-center text-lg sm:text-2xl text-yellow-300 break-all">
-                ID: {id}
-            </h2>
+        <div className="flex w-full flex-col gap-6 sm:gap-8">
+            <div>
+                <section className="self-start min-w-0 rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                    <h2 className=" text-xl sm:text-3xl font-bold text-yellow-300">
+                        {nombre} {apellidos}
+                    </h2>
+                    <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        Alias: {alias}
+                    </p>
+                    <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        Cargo: {cargo.nombre}
+                    </p>
+                    <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        email: {email}
+                    </p>
+                    <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        Salario anual: {salario.toString()} edis
+                    </p>
+                    <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        Fecha de alta: {fechaAlta.toLocaleDateString("es-ES")}
+                    </p>
+                    <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        Estado: {activo ? "activo" : "inactivo"}
+                    </p>
+                </section>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 lg:gap-8">
+                <section className="self-start min-w-0 rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                    <div className="mb-4 text-xl font-bold text-yellow-300">
+                        Departamento
+                    </div>
+                    <CardDepartamento data={departamento} />
+                </section>
+
+                <section className="min-w-0 overflow-x-auto rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                    <Suspense
+                        fallback={
+                            <p className="text-center text-yellow-300">
+                                Cargando vehículos...
+                            </p>
+                        }
+                    >
+                        <ListaVehiculos empleadoId={empleadoId} />
+                    </Suspense>
+                </section>
+            </div>
         </div>
     );
 }

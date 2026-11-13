@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 import Anterior from "@/components/BotonFlechaAnterior";
 import ListaVehiculos from "@/components/ListaVehiculos";
 import { CardDepartamento } from "@/components/CardDepartamento";
-import { prisma } from "@/lib/prisma";
 
 export default function Page({ params }) {
     return (

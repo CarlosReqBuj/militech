@@ -27,13 +27,7 @@ export const metadata = {
 
     icons: {
         icon: "/icon-192.png",
-        apple: [
-            {
-                url: "/icon-192.png",
-                sizes: "192x192",
-                type: "image/png",
-            },
-        ],
+        apple: "/icon-192.png",
     },
 };
 
@@ -52,6 +46,9 @@ export default function RootLayout({ children }) {
             lang="es"
             className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
         >
+            <head>
+                <link rel="apple-touch-startup-image" href="/icon-192.png" />
+            </head>
             <body className="min-h-full flex flex-col">
                 <ServiceWorkerRegister />
                 {children}

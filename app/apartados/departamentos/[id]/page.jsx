@@ -86,7 +86,7 @@ async function InfoDepartamento({ params }) {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+            <div className="grid grid-cols-1 gap-20 lg:grid-cols-2 lg:gap-8">
                 <section className="min-w-0 overflow-x-auto rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
                     <Suspense
                         fallback={

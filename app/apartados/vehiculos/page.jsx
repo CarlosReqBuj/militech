@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
 import ListaVehiculos from "@/components/ListaVehiculos";
+import BotonAñadirVehiculo from "@/components/BotonAñadirVehiculo";
 
 export default function Vehiculos() {
     return (
@@ -38,6 +39,10 @@ export default function Vehiculos() {
                 >
                     Vehículos
                 </h1>
+
+                <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
+                    <BotonAñadirVehiculo />
+                </div>
 
                 <div className="w-full max-w-6xl">
                     <Suspense

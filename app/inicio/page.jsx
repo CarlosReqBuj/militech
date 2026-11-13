@@ -31,8 +31,7 @@ export default function Inicio() {
                     lg:text-6xl 
                     font-bold 
                     text-yellow-300 
-                    text-center 
-                    break-words"
+                    text-center"
                 >
                     Bienvenido a Militech
                 </h1>

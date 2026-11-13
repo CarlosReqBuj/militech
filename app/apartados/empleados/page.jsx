@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
 import ListaEmpleados from "@/components/ListaEmpleados";
+import BotonAñadirEmpleado from "@/components/BotonAñadirEmpleado";
 
 export default function Empleados() {
     return (
@@ -38,6 +39,10 @@ export default function Empleados() {
                 >
                     Empleados
                 </h1>
+
+                <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
+                    <BotonAñadirEmpleado />
+                </div>
 
                 <div className="w-full max-w-6xl">
                     <Suspense

@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata = {
     title: "Militech Corporation",
     description: "Panel de gestión corporativa",
-    manifest: "/manifest.webmanifest",
+    manifest: "/manifest.webmanifest?v=0.1",
     applicationName: "Militech",
     appleWebApp: {
         capable: true,

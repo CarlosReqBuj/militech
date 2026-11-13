@@ -35,8 +35,7 @@ export default function Page({ params }) {
                     lg:text-5xl 
                     font-bold 
                     text-yellow-300 
-                    text-center 
-                    break-words"
+                    text-center"
                 >
                     Departamento
                 </h1>
@@ -78,10 +77,10 @@ async function InfoDepartamento({ params }) {
     return (
         <div className="flex w-full flex-col gap-6 sm:gap-8">
             <div className="text-center sm:text-left">
-                <h2 className="text-center text-xl sm:text-3xl font-bold text-yellow-300 break-words">
+                <h2 className="text-center text-xl sm:text-3xl font-bold text-yellow-300">
                     {nombre}
                 </h2>
-                <p className="text-center mt-2 text-sm sm:text-base text-gray-300 break-words">
+                <p className="text-center mt-2 text-sm sm:text-base text-gray-300">
                     {descripcion}
                 </p>
             </div>

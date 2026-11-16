@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { prisma } from "@/lib/prisma";
 import Anterior from "@/components/BotonFlechaAnterior";
 import ListaEmpleados from "@/components/ListaEmpleados";
 import BotonAñadirEmpleado from "@/components/BotonAñadirEmpleado";
@@ -41,7 +42,9 @@ export default function Empleados() {
                 </h1>
 
                 <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
-                    <BotonAñadirEmpleado />
+                    <Suspense fallback={null}>
+                        <AñadirEmpleado />
+                    </Suspense>
                 </div>
 
                 <div className="w-full max-w-6xl">
@@ -57,5 +60,16 @@ export default function Empleados() {
                 </div>
             </div>
         </main>
+    );
+}
+
+async function AñadirEmpleado() {
+    const [departamentos, cargos] = await Promise.all([
+        prisma.departamento.findMany({ orderBy: { nombre: "asc" } }),
+        prisma.cargo.findMany({ orderBy: { nivel: "asc" } }),
+    ]);
+
+    return (
+        <BotonAñadirEmpleado departamentos={departamentos} cargos={cargos} />
     );
 }

@@ -20,8 +20,7 @@ export default function Home() {
                     sm:p-6 
                     text-yellow-300 
                     font-semibold 
-                    text-center 
-                    break-words"
+                    text-center"
                 >
                     Militech
                 </h1>

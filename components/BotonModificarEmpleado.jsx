@@ -1,0 +1,215 @@
+"use client";
+
+import { useRef } from "react";
+import { useFormStatus } from "react-dom";
+import { toast } from "sonner";
+import { actualizarEmpleado } from "@/actions/empleados";
+
+const estilo =
+    "inline-flex items-center justify-center w-full max-w-xs px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-lg text-center bg-yellow-300 hover:bg-yellow-200 rounded-lg text-black font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-yellow-300/50 active:scale-95";
+
+const inputClase =
+    "w-full rounded-lg border-2 border-yellow-300/60 bg-transparent px-3 py-2 text-sm sm:text-base text-gray-200 placeholder:text-gray-500 focus:border-yellow-300 focus:outline-none";
+
+const labelClase = "flex flex-col gap-1 text-sm sm:text-base text-gray-300";
+
+function BotonGuardar() {
+    const { pending } = useFormStatus();
+
+    return (
+        <button
+            type="submit"
+            disabled={pending}
+            className={`${estilo} sm:w-auto disabled:cursor-not-allowed disabled:opacity-50`}
+        >
+            {pending ? "Guardando..." : "Guardar cambios"}
+        </button>
+    );
+}
+
+export default function BotonModificarEmpleado({
+    empleado,
+    departamentos = [],
+    cargos = [],
+}) {
+    const dialogRef = useRef(null);
+    const formRef = useRef(null);
+
+    async function enviar(formData) {
+        const res = await actualizarEmpleado(empleado.id, formData);
+
+        if (res?.error) {
+            toast.error(res.error);
+            return;
+        }
+
+        toast.success("Empleado modificado");
+        dialogRef.current.close();
+    }
+
+    return (
+        <>
+            <button
+                type="button"
+                onClick={() => dialogRef.current.showModal()}
+                className={estilo}
+            >
+                Modificar empleado
+            </button>
+
+            <dialog
+                ref={dialogRef}
+                onClose={() => formRef.current?.reset()}
+                className="m-auto max-h-[95dvh] w-[calc(100%-1.5rem)] max-w-4xl rounded-xl border-4 border-yellow-300 bg-neutral-950 p-0 backdrop:bg-black/70"
+            >
+                <div className="p-4 sm:p-6">
+                    <h2 className="mb-4 text-center text-2xl font-bold text-yellow-300 sm:text-3xl">
+                        Modificar empleado
+                    </h2>
+
+                    <form
+                        key={JSON.stringify(empleado)}
+                        ref={formRef}
+                        action={enviar}
+                        className="flex flex-col gap-4"
+                    >
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                            <label className={labelClase}>
+                                Nombre
+                                <input
+                                    name="nombre"
+                                    required
+                                    defaultValue={empleado.nombre}
+                                    className={inputClase}
+                                />
+                            </label>
+                            <label className={labelClase}>
+                                Apellidos
+                                <input
+                                    name="apellidos"
+                                    required
+                                    defaultValue={empleado.apellidos}
+                                    className={inputClase}
+                                />
+                            </label>
+                            <label className={labelClase}>
+                                Alias (opcional)
+                                <input
+                                    name="alias"
+                                    defaultValue={empleado.alias ?? ""}
+                                    className={inputClase}
+                                />
+                            </label>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <label className={labelClase}>
+                                Email
+                                <input
+                                    name="email"
+                                    type="email"
+                                    required
+                                    defaultValue={empleado.email}
+                                    className={inputClase}
+                                />
+                            </label>
+                            <label className={labelClase}>
+                                Salario anual (edis)
+                                <input
+                                    name="salario"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    required
+                                    defaultValue={empleado.salario}
+                                    className={inputClase}
+                                />
+                            </label>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                            <label className={labelClase}>
+                                Departamento
+                                <select
+                                    name="departamentoId"
+                                    required
+                                    defaultValue={String(
+                                        empleado.departamentoId,
+                                    )}
+                                    className={inputClase}
+                                >
+                                    {departamentos.map((d) => (
+                                        <option
+                                            key={d.id}
+                                            value={d.id}
+                                            className="bg-neutral-950"
+                                        >
+                                            {d.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <label className={labelClase}>
+                                Cargo
+                                <select
+                                    name="cargoId"
+                                    required
+                                    defaultValue={String(empleado.cargoId)}
+                                    className={inputClase}
+                                >
+                                    {cargos.map((c) => (
+                                        <option
+                                            key={c.id}
+                                            value={c.id}
+                                            className="bg-neutral-950"
+                                        >
+                                            {c.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <fieldset className="flex items-center gap-6 text-gray-300 sm:self-end sm:pb-2">
+                                <legend className="mb-1 text-sm sm:text-base">
+                                    Estado
+                                </legend>
+                                <label className="flex items-center gap-2">
+                                    <input
+                                        type="radio"
+                                        name="activo"
+                                        value="true"
+                                        defaultChecked={empleado.activo}
+                                        className="accent-yellow-300"
+                                    />
+                                    Activo
+                                </label>
+                                <label className="flex items-center gap-2">
+                                    <input
+                                        type="radio"
+                                        name="activo"
+                                        value="false"
+                                        defaultChecked={!empleado.activo}
+                                        className="accent-yellow-300"
+                                    />
+                                    Inactivo
+                                </label>
+                            </fieldset>
+                        </div>
+
+                        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
+                            <button
+                                type="button"
+                                onClick={() => dialogRef.current.close()}
+                                className="rounded-lg px-4 py-2 text-gray-400 underline hover:text-yellow-300"
+                            >
+                                Cancelar
+                            </button>
+                            <BotonGuardar />
+                        </div>
+                    </form>
+                </div>
+            </dialog>
+        </>
+    );
+}

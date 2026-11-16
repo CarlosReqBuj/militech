@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import Anterior from "@/components/BotonFlechaAnterior";
 import ListaVehiculos from "@/components/ListaVehiculos";
 import { CardDepartamento } from "@/components/CardDepartamento";
+import BotonEliminarEmpleado from "@/components/BotonEliminarEmpleado";
+import BotonModificarEmpleado from "@/components/BotonModificarEmpleado";
 
 export default function Page({ params }) {
     return (
@@ -61,10 +63,14 @@ async function InfoEmpleado({ params }) {
     const { id } = await params;
     const empleadoId = Number(id);
 
-    const empleado = await prisma.empleado.findUnique({
-        where: { id: empleadoId },
-        include: { departamento: true, cargo: true },
-    });
+    const [empleado, departamentos, cargos] = await Promise.all([
+        prisma.empleado.findUnique({
+            where: { id: empleadoId },
+            include: { departamento: true, cargo: true },
+        }),
+        prisma.departamento.findMany({ orderBy: { nombre: "asc" } }),
+        prisma.cargo.findMany({ orderBy: { nivel: "asc" } }),
+    ]);
 
     if (!empleado) {
         return (
@@ -88,6 +94,27 @@ async function InfoEmpleado({ params }) {
 
     return (
         <div className="flex w-full flex-col gap-6 sm:gap-8">
+            <div className="absolute right-4 top-4 flex w-40 flex-col gap-3 sm:right-6 sm:top-6 sm:w-56">
+                <BotonEliminarEmpleado
+                    id={empleadoId}
+                    nombre={`${nombre} ${apellidos}`}
+                />
+                <BotonModificarEmpleado
+                    empleado={{
+                        id: empleado.id,
+                        nombre,
+                        apellidos,
+                        alias,
+                        email,
+                        salario: salario.toString(),
+                        activo,
+                        departamentoId: empleado.departamentoId,
+                        cargoId: empleado.cargoId,
+                    }}
+                    departamentos={departamentos}
+                    cargos={cargos}
+                />
+            </div>
             <div>
                 <section className="self-start min-w-0 rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
                     <h2 className=" text-xl sm:text-3xl font-bold text-yellow-300">

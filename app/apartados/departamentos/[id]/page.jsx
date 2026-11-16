@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
 import ListaEmpleados from "@/components/empleados/ListaEmpleados";
-import ListaVehiculos from "@/components/vehículos/ListaVehiculos";
+import ListaVehiculos from "@/components/vehiculos/ListaVehiculos";
 import { prisma } from "@/lib/prisma";
 
 export default function Page({ params }) {

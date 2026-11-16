@@ -4,6 +4,7 @@ import { useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { eliminarEmpleado } from "@/actions/empleados";
+import BotonGenerico from "@/components/BotonGenerico";
 
 export default function BotonEliminarEmpleado({ id, nombre }) {
     const dialogRef = useRef(null);
@@ -27,13 +28,12 @@ export default function BotonEliminarEmpleado({ id, nombre }) {
 
     return (
         <>
-            <button
-                type="button"
+            <BotonGenerico
+                variante="rojo"
                 onClick={() => dialogRef.current.showModal()}
-                className="inline-flex items-center justify-center w-full max-w-xs px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-lg text-center bg-red-500 hover:bg-red-400 rounded-lg text-black font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-red-500/50 active:scale-95"
             >
                 Eliminar empleado
-            </button>
+            </BotonGenerico>
 
             <dialog
                 ref={dialogRef}
@@ -53,23 +53,23 @@ export default function BotonEliminarEmpleado({ id, nombre }) {
                     </p>
 
                     <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-center">
-                        <button
-                            type="button"
-                            onClick={() => dialogRef.current.close()}
+                        <BotonGenerico
+                            variante="secundario"
                             disabled={pending}
-                            className="rounded-lg px-4 py-2 text-gray-400 underline hover:text-yellow-300 disabled:opacity-50"
+                            className="sm:w-auto"
+                            onClick={() => dialogRef.current.close()}
                         >
                             Cancelar
-                        </button>
+                        </BotonGenerico>
 
-                        <button
-                            type="button"
-                            onClick={confirmar}
+                        <BotonGenerico
+                            variante="rojo"
                             disabled={pending}
-                            className="rounded-lg border-4 border-red-500 px-4 py-2 font-bold text-red-500 transition hover:bg-red-500 hover:text-black disabled:cursor-not-allowed disabled:opacity-50"
+                            className="sm:w-auto border-4 border-red-500 hover:bg-red-500 hover:text-black"
+                            onClick={confirmar}
                         >
                             {pending ? "Eliminando..." : "Sí, eliminar"}
-                        </button>
+                        </BotonGenerico>
                     </div>
                 </div>
             </dialog>

@@ -3,10 +3,8 @@
 import { useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
+import BotonGenerico from "@/components/BotonGenerico";
 import { actualizarEmpleado } from "@/actions/empleados";
-
-const estilo =
-    "inline-flex items-center justify-center w-full max-w-xs px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-lg text-center bg-yellow-300 hover:bg-yellow-200 rounded-lg text-black font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-yellow-300/50 active:scale-95";
 
 const inputClase =
     "w-full rounded-lg border-2 border-yellow-300/60 bg-transparent px-3 py-2 text-sm sm:text-base text-gray-200 placeholder:text-gray-500 focus:border-yellow-300 focus:outline-none";
@@ -17,13 +15,9 @@ function BotonGuardar() {
     const { pending } = useFormStatus();
 
     return (
-        <button
-            type="submit"
-            disabled={pending}
-            className={`${estilo} sm:w-auto disabled:cursor-not-allowed disabled:opacity-50`}
-        >
+        <BotonGenerico type="submit" disabled={pending} className="sm:w-auto">
             {pending ? "Guardando..." : "Guardar cambios"}
-        </button>
+        </BotonGenerico>
     );
 }
 
@@ -49,13 +43,9 @@ export default function BotonModificarEmpleado({
 
     return (
         <>
-            <button
-                type="button"
-                onClick={() => dialogRef.current.showModal()}
-                className={estilo}
-            >
+            <BotonGenerico onClick={() => dialogRef.current.showModal()}>
                 Modificar empleado
-            </button>
+            </BotonGenerico>
 
             <dialog
                 ref={dialogRef}
@@ -83,6 +73,7 @@ export default function BotonModificarEmpleado({
                                     className={inputClase}
                                 />
                             </label>
+
                             <label className={labelClase}>
                                 Apellidos
                                 <input
@@ -92,6 +83,7 @@ export default function BotonModificarEmpleado({
                                     className={inputClase}
                                 />
                             </label>
+
                             <label className={labelClase}>
                                 Alias (opcional)
                                 <input
@@ -113,6 +105,7 @@ export default function BotonModificarEmpleado({
                                     className={inputClase}
                                 />
                             </label>
+
                             <label className={labelClase}>
                                 Salario anual (edis)
                                 <input
@@ -174,6 +167,7 @@ export default function BotonModificarEmpleado({
                                 <legend className="mb-1 text-sm sm:text-base">
                                     Estado
                                 </legend>
+
                                 <label className="flex items-center gap-2">
                                     <input
                                         type="radio"
@@ -184,6 +178,7 @@ export default function BotonModificarEmpleado({
                                     />
                                     Activo
                                 </label>
+
                                 <label className="flex items-center gap-2">
                                     <input
                                         type="radio"
@@ -198,13 +193,14 @@ export default function BotonModificarEmpleado({
                         </div>
 
                         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
-                            <button
-                                type="button"
+                            <BotonGenerico
+                                variante="secundario"
+                                className="sm:w-auto"
                                 onClick={() => dialogRef.current.close()}
-                                className="rounded-lg px-4 py-2 text-gray-400 underline hover:text-yellow-300"
                             >
                                 Cancelar
-                            </button>
+                            </BotonGenerico>
+
                             <BotonGuardar />
                         </div>
                     </form>

@@ -15,13 +15,9 @@ function BotonEnviar() {
     const { pending } = useFormStatus();
 
     return (
-        <button
-            type="submit"
-            disabled={pending}
-            className="rounded-lg border-4 border-yellow-300 px-4 py-2 font-bold text-yellow-300 transition hover:bg-yellow-300 hover:text-black disabled:cursor-not-allowed disabled:opacity-50"
-        >
+        <BotonGenerico type="submit" disabled={pending} className="sm:w-auto">
             {pending ? "Guardando..." : "Guardar empleado"}
-        </button>
+        </BotonGenerico>
     );
 }
 
@@ -69,6 +65,7 @@ export default function BotonAñadirEmpleado({
                                     placeholder="Johnny"
                                 />
                             </label>
+
                             <label className={labelClase}>
                                 Apellidos
                                 <input
@@ -78,6 +75,7 @@ export default function BotonAñadirEmpleado({
                                     placeholder="Silverhand"
                                 />
                             </label>
+
                             <label className={labelClase}>
                                 Alias (opcional)
                                 <input
@@ -99,6 +97,7 @@ export default function BotonAñadirEmpleado({
                                     placeholder="correo@militech.com"
                                 />
                             </label>
+
                             <label className={labelClase}>
                                 Salario anual (edis)
                                 <input
@@ -171,6 +170,7 @@ export default function BotonAñadirEmpleado({
                                 <legend className="mb-1 text-sm sm:text-base">
                                     Estado
                                 </legend>
+
                                 <label className="flex items-center gap-2">
                                     <input
                                         type="radio"
@@ -181,6 +181,7 @@ export default function BotonAñadirEmpleado({
                                     />
                                     Activo
                                 </label>
+
                                 <label className="flex items-center gap-2">
                                     <input
                                         type="radio"
@@ -194,13 +195,14 @@ export default function BotonAñadirEmpleado({
                         </div>
 
                         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
-                            <button
-                                type="button"
+                            <BotonGenerico
+                                variante="secundario"
+                                className="sm:w-auto"
                                 onClick={() => dialogRef.current.close()}
-                                className="rounded-lg px-4 py-2 text-gray-400 underline hover:text-yellow-300"
                             >
                                 Cancelar
-                            </button>
+                            </BotonGenerico>
+
                             <BotonEnviar />
                         </div>
                     </form>

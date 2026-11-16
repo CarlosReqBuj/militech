@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 
 export async function crearEmpleado(formData) {
     try {
+        const vehiculosIds = formData.getAll("vehiculos").map(Number);
+
         await prisma.empleado.create({
             data: {
                 nombre: formData.get("nombre"),
@@ -15,6 +17,10 @@ export async function crearEmpleado(formData) {
                 activo: formData.get("activo") === "true",
                 departamentoId: Number(formData.get("departamentoId")),
                 cargoId: Number(formData.get("cargoId")),
+
+                vehiculos: {
+                    connect: vehiculosIds.map((id) => ({ id })),
+                },
             },
         });
 
@@ -46,6 +52,8 @@ export async function eliminarEmpleado(id) {
 
 export async function actualizarEmpleado(id, formData) {
     try {
+        const vehiculosIds = formData.getAll("vehiculos").map(Number);
+
         await prisma.empleado.update({
             where: { id: Number(id) },
             data: {
@@ -53,15 +61,22 @@ export async function actualizarEmpleado(id, formData) {
                 apellidos: formData.get("apellidos"),
                 alias: formData.get("alias") || null,
                 email: formData.get("email"),
-                salario: formData.get("salario"),
+                salario: Number(formData.get("salario")),
                 activo: formData.get("activo") === "true",
                 departamentoId: Number(formData.get("departamentoId")),
                 cargoId: Number(formData.get("cargoId")),
+
+                vehiculos: {
+                    set: vehiculosIds.map((vehiculoId) => ({
+                        id: vehiculoId,
+                    })),
+                },
             },
         });
 
         revalidatePath("/apartados/empleados");
         revalidatePath(`/apartados/empleados/${id}`);
+
         return { ok: true };
     } catch (e) {
         console.error("Error al modificar empleado:", e);
@@ -69,9 +84,11 @@ export async function actualizarEmpleado(id, formData) {
         if (e.code === "P2002") {
             return { error: "Ya existe otro empleado con ese email" };
         }
+
         if (e.code === "P2025") {
             return { error: "El empleado ya no existe" };
         }
+
         return { error: "No se pudo modificar el empleado" };
     }
 }

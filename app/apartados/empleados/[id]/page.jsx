@@ -63,13 +63,18 @@ async function InfoEmpleado({ params }) {
     const { id } = await params;
     const empleadoId = Number(id);
 
-    const [empleado, departamentos, cargos] = await Promise.all([
+    const [empleado, departamentos, cargos, vehiculos] = await Promise.all([
         prisma.empleado.findUnique({
             where: { id: empleadoId },
-            include: { departamento: true, cargo: true },
+            include: {
+                departamento: true,
+                cargo: true,
+                vehiculos: true,
+            },
         }),
         prisma.departamento.findMany({ orderBy: { nombre: "asc" } }),
         prisma.cargo.findMany({ orderBy: { nivel: "asc" } }),
+        prisma.vehiculo.findMany({ orderBy: { matricula: "asc" } }),
     ]);
 
     if (!empleado) {
@@ -126,9 +131,11 @@ async function InfoEmpleado({ params }) {
                             activo,
                             departamentoId: empleado.departamentoId,
                             cargoId: empleado.cargoId,
+                            vehiculosIds: empleado.vehiculos.map((v) => v.id),
                         }}
                         departamentos={departamentos}
                         cargos={cargos}
+                        vehiculos={vehiculos}
                     />
                 </div>
             </div>

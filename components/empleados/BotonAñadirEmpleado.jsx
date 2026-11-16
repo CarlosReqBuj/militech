@@ -24,6 +24,7 @@ function BotonEnviar() {
 export default function BotonAñadirEmpleado({
     departamentos = [],
     cargos = [],
+    vehiculos = [],
 }) {
     const dialogRef = useRef(null);
 
@@ -36,18 +37,18 @@ export default function BotonAñadirEmpleado({
         }
 
         toast.success("Empleado añadido");
-        dialogRef.current.close();
+        dialogRef.current?.close();
     }
 
     return (
         <>
-            <BotonGenerico onClick={() => dialogRef.current.showModal()}>
+            <BotonGenerico onClick={() => dialogRef.current?.showModal()}>
                 Añadir empleado
             </BotonGenerico>
 
             <dialog
                 ref={dialogRef}
-                className="m-auto max-h-[95dvh] w-[calc(100%-1.5rem)] max-w-4xl rounded-xl border-4 border-yellow-300 bg-neutral-950 p-0 backdrop:bg-black/70"
+                className="m-auto max-h-[95dvh] w-[calc(100%-1.5rem)] max-w-4xl overflow-y-auto rounded-xl border-4 border-yellow-300 bg-neutral-950 p-0 backdrop:bg-black/70"
             >
                 <div className="p-4 sm:p-6">
                     <h2 className="mb-4 text-center text-2xl font-bold text-yellow-300 sm:text-3xl">
@@ -55,6 +56,7 @@ export default function BotonAñadirEmpleado({
                     </h2>
 
                     <form action={enviar} className="flex flex-col gap-4">
+                        {/* Datos personales */}
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                             <label className={labelClase}>
                                 Nombre
@@ -86,6 +88,7 @@ export default function BotonAñadirEmpleado({
                             </label>
                         </div>
 
+                        {/* Email y salario */}
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <label className={labelClase}>
                                 Email
@@ -111,6 +114,7 @@ export default function BotonAñadirEmpleado({
                             </label>
                         </div>
 
+                        {/* Departamento, cargo y estado */}
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                             <label className={labelClase}>
                                 Departamento
@@ -127,6 +131,7 @@ export default function BotonAñadirEmpleado({
                                     >
                                         Selecciona...
                                     </option>
+
                                     {departamentos.map((d) => (
                                         <option
                                             key={d.id}
@@ -154,6 +159,7 @@ export default function BotonAñadirEmpleado({
                                     >
                                         Selecciona...
                                     </option>
+
                                     {cargos.map((c) => (
                                         <option
                                             key={c.id}
@@ -194,11 +200,64 @@ export default function BotonAñadirEmpleado({
                             </fieldset>
                         </div>
 
+                        {/* Vehículos asignados */}
+
+                        {/* Vehículos asignados */}
+                        <details className="group rounded-lg border-2 border-yellow-300/60">
+                            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-3 text-lg font-bold text-yellow-300 hover:bg-yellow-300/10 [&::-webkit-details-marker]:hidden">
+                                <span>Vehículos asignados</span>
+
+                                <span className="text-2xl transition-transform duration-200 group-open:rotate-180">
+                                    ▾
+                                </span>
+                            </summary>
+
+                            <div className="flex flex-col gap-3 border-t border-yellow-300/30 p-3">
+                                <p className="text-sm text-gray-400">
+                                    Selecciona los vehículos que tendrá
+                                    asignados este empleado.
+                                </p>
+
+                                {vehiculos.length > 0 ? (
+                                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                        {vehiculos.map((v) => (
+                                            <label
+                                                key={v.id}
+                                                className="flex cursor-pointer items-center gap-3 rounded-lg border border-yellow-300/30 p-3 text-gray-200 hover:bg-yellow-300/10"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    name="vehiculos"
+                                                    value={v.id}
+                                                    className="h-5 w-5 shrink-0 accent-yellow-300"
+                                                />
+
+                                                <span className="min-w-0">
+                                                    <span className="block font-semibold">
+                                                        {v.matricula}
+                                                    </span>
+
+                                                    <span className="block text-sm text-gray-400">
+                                                        {v.marca} {v.modelo}
+                                                    </span>
+                                                </span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-400">
+                                        No hay vehículos disponibles.
+                                    </p>
+                                )}
+                            </div>
+                        </details>
+
+                        {/* Botones */}
                         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
                             <BotonGenerico
                                 variante="secundario"
                                 className="sm:w-auto"
-                                onClick={() => dialogRef.current.close()}
+                                onClick={() => dialogRef.current?.close()}
                             >
                                 Cancelar
                             </BotonGenerico>

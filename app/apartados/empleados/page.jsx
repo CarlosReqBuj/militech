@@ -64,12 +64,17 @@ export default function Empleados() {
 }
 
 async function AñadirEmpleado() {
-    const [departamentos, cargos] = await Promise.all([
+    const [departamentos, cargos, vehiculos] = await Promise.all([
         prisma.departamento.findMany({ orderBy: { nombre: "asc" } }),
         prisma.cargo.findMany({ orderBy: { nivel: "asc" } }),
+        prisma.vehiculo.findMany({ orderBy: { matricula: "asc" } }),
     ]);
 
     return (
-        <BotonAñadirEmpleado departamentos={departamentos} cargos={cargos} />
+        <BotonAñadirEmpleado
+            departamentos={departamentos}
+            cargos={cargos}
+            vehiculos={vehiculos}
+        />
     );
 }

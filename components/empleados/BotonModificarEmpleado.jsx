@@ -25,6 +25,7 @@ export default function BotonModificarEmpleado({
     empleado,
     departamentos = [],
     cargos = [],
+    vehiculos = [],
 }) {
     const dialogRef = useRef(null);
     const formRef = useRef(null);
@@ -191,6 +192,58 @@ export default function BotonModificarEmpleado({
                                 </label>
                             </fieldset>
                         </div>
+
+                        <details className="group rounded-lg border-2 border-yellow-300/60">
+                            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-3 text-lg font-bold text-yellow-300 hover:bg-yellow-300/10 [&::-webkit-details-marker]:hidden">
+                                <span>Vehículos asignados</span>
+
+                                <span className="text-2xl transition-transform duration-200 group-open:rotate-180">
+                                    ▾
+                                </span>
+                            </summary>
+
+                            <div className="flex flex-col gap-3 border-t border-yellow-300/30 p-3">
+                                <p className="text-sm text-gray-400">
+                                    Selecciona los vehículos que tendrá
+                                    asignados este empleado.
+                                </p>
+
+                                {vehiculos.length > 0 ? (
+                                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                        {vehiculos.map((v) => (
+                                            <label
+                                                key={v.id}
+                                                className="flex cursor-pointer items-center gap-3 rounded-lg border border-yellow-300/30 p-3 text-gray-200 hover:bg-yellow-300/10"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    name="vehiculos"
+                                                    value={v.id}
+                                                    defaultChecked={empleado.vehiculosIds?.includes(
+                                                        v.id,
+                                                    )}
+                                                    className="h-5 w-5 shrink-0 accent-yellow-300"
+                                                />
+
+                                                <span className="min-w-0">
+                                                    <span className="block font-semibold">
+                                                        {v.matricula}
+                                                    </span>
+
+                                                    <span className="block text-sm text-gray-400">
+                                                        {v.marca} {v.modelo}
+                                                    </span>
+                                                </span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-400">
+                                        No hay vehículos disponibles.
+                                    </p>
+                                )}
+                            </div>
+                        </details>
 
                         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
                             <BotonGenerico

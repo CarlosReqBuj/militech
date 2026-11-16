@@ -74,28 +74,38 @@ async function InfoVehiculo({ params }) {
         );
     }
 
-    const { matricula, marca, modelo, tipo, operativo, departamento } =
+    const { matricula, marca, modelo, tipo, operativo, departamento, foto } =
         vehiculo;
 
     return (
         <div className="flex w-full flex-col gap-6 sm:gap-8">
             <div>
-                <section className="self-start min-w-0 rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
-                    <h2 className="text-xl sm:text-3xl font-bold text-yellow-300">
-                        {matricula}
-                    </h2>
-                    <p className="mt-2 text-sm sm:text-base text-gray-300">
-                        Marca: {marca}
-                    </p>
-                    <p className="mt-2 text-sm sm:text-base text-gray-300">
-                        Modelo: {modelo}
-                    </p>
-                    <p className="mt-2 text-sm sm:text-base text-gray-300">
-                        Tipo: {tipo}
-                    </p>
-                    <p className="mt-2 text-sm sm:text-base text-gray-300">
-                        Estado: {operativo ? "operativo " : "no disponible"}
-                    </p>
+                <section className="flex justify-start items-center gap-4 sm:gap-8 w-fit max-w-full rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                    <div className="min-w-0">
+                        <h2 className="text-xl sm:text-3xl font-bold text-yellow-300">
+                            {matricula}
+                        </h2>
+                        <p className="mt-2 text-sm sm:text-base text-gray-300">
+                            Marca: {marca}
+                        </p>
+                        <p className="mt-2 text-sm sm:text-base text-gray-300">
+                            Modelo: {modelo}
+                        </p>
+                        <p className="mt-2 text-sm sm:text-base text-gray-300">
+                            Tipo: {tipo}
+                        </p>
+                        <p className="mt-2 text-sm sm:text-base text-gray-300">
+                            Estado: {operativo ? "operativo" : "no disponible"}
+                        </p>
+                    </div>
+
+                    <div className="shrink-0">
+                        <img
+                            src={foto}
+                            alt="Foto del vehículo"
+                            className="w-24 h-24 sm:w-40 sm:h-40 object-contain rounded-lg cursor-zoom-in transition-all duration-300 active:scale-[5] active:z-50"
+                        />
+                    </div>
                 </section>
             </div>
 

@@ -1,19 +1,19 @@
 // Modal.jsx
-'use client'
-import { useRef } from 'react'
+"use client";
+import { useRef } from "react";
 
 export const Modal = ({ children, trigger, className = "" }) => {
-    const dialogRef = useRef(null)
+    const dialogRef = useRef(null);
 
-    const openDialog = () => dialogRef.current?.showModal()
-    const closeDialog = () => dialogRef.current?.close()
+    const openDialog = () => dialogRef.current?.showModal();
+    const closeDialog = () => dialogRef.current?.close();
 
     // Cierra el modal solo si el objetivo (target) del clic fue directamente el tag <dialog> (es decir, el backdrop)
     const handleDialogClick = (e) => {
         if (e.target === dialogRef.current) {
-            closeDialog()
+            closeDialog();
         }
-    }
+    };
 
     return (
         <>
@@ -23,10 +23,10 @@ export const Modal = ({ children, trigger, className = "" }) => {
                 className={`inline-block w-fit cursor-pointer ${className}`}
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && openDialog()}
+                onKeyDown={(e) => e.key === "Enter" && openDialog()}
             >
                 {trigger}
-            </div >
+            </div>
 
             <dialog
                 ref={dialogRef}
@@ -54,10 +54,9 @@ export const Modal = ({ children, trigger, className = "" }) => {
                     backdrop:transition-[background-color,display,overlay]
                     backdrop:duration-500
                 "
-
             >
                 {/* Contenedor interno relativo para evitar que el scroll o los clics internos afecten al backdrop */}
-                <div className="relative p-6 max-h-[85vh] overflow-y-auto">
+                <div className="relative p-10 max-h-[85vh] overflow-y-auto bg-stone-800">
                     {/* Botón de cierre accesible */}
                     <button
                         onClick={closeDialog}
@@ -72,16 +71,12 @@ export const Modal = ({ children, trigger, className = "" }) => {
                 </div>
             </dialog>
         </>
-    )
-}
-
-
+    );
+};
 
 // 'use client'
 // import { useRef } from 'react'
 // // https://medium.com/@bomber.marek/how-to-use-dialog-in-react-easy-modals-tooltips-81e44d570c8a
-
-
 
 // export const Modal = ({ children, trigger }) => {
 //     const dialogRef = useRef(null)
@@ -103,13 +98,11 @@ export const Modal = ({ children, trigger, className = "" }) => {
 //         }
 //     }
 
-
 //     return (
 //         <>
 //             <div onClick={openDialog} className='inline-block w-fit'>
 //                 {trigger}
 //             </div>
-
 
 //             <dialog
 //                 ref={dialogRef}
@@ -123,8 +116,6 @@ export const Modal = ({ children, trigger, className = "" }) => {
 //                 {children}
 //             </dialog>
 
-
 //         </>
 //     )
 // }
-

@@ -94,26 +94,43 @@ async function InfoEmpleado({ params }) {
 
     return (
         <div className="flex w-full flex-col gap-6 sm:gap-8">
-            <div className="absolute right-4 top-4 flex w-40 flex-col gap-3 sm:right-6 sm:top-6 sm:w-56">
-                <BotonEliminarEmpleado
-                    id={empleadoId}
-                    nombre={`${nombre} ${apellidos}`}
-                />
-                <BotonModificarEmpleado
-                    empleado={{
-                        id: empleado.id,
-                        nombre,
-                        apellidos,
-                        alias,
-                        email,
-                        salario: salario.toString(),
-                        activo,
-                        departamentoId: empleado.departamentoId,
-                        cargoId: empleado.cargoId,
-                    }}
-                    departamentos={departamentos}
-                    cargos={cargos}
-                />
+            <div
+                className="
+    flex
+    w-full
+    flex-col-reverse
+    gap-3
+    sm:flex-row
+    sm:justify-end
+    sm:items-center
+    sm:gap-4
+    mb-2
+"
+            >
+                <div className="w-full sm:w-auto sm:min-w-160px">
+                    <BotonEliminarEmpleado
+                        id={empleadoId}
+                        nombre={`${nombre} ${apellidos}`}
+                    />
+                </div>
+
+                <div className="w-full sm:w-auto sm:min-w-160px">
+                    <BotonModificarEmpleado
+                        empleado={{
+                            id: empleado.id,
+                            nombre,
+                            apellidos,
+                            alias,
+                            email,
+                            salario: salario.toString(),
+                            activo,
+                            departamentoId: empleado.departamentoId,
+                            cargoId: empleado.cargoId,
+                        }}
+                        departamentos={departamentos}
+                        cargos={cargos}
+                    />
+                </div>
             </div>
             <div>
                 <section className="self-start min-w-0 rounded-xl border-4 border-yellow-300 p-3 sm:p-4">

@@ -3,6 +3,7 @@ import Anterior from "@/components/BotonFlechaAnterior";
 import { prisma } from "@/lib/prisma";
 import ListaEmpleados from "@/components/empleados/ListaEmpleados";
 import { CardDepartamento } from "@/components/departamentos/CardDepartamento";
+import { Modal } from "@/components/simpleui";
 
 export default function Page({ params }) {
     return (
@@ -98,14 +99,21 @@ async function InfoVehiculo({ params }) {
                             Estado: {operativo ? "operativo" : "no disponible"}
                         </p>
                     </div>
-
-                    <div className="shrink-0">
+                    <Modal
+                        trigger={
+                            <img
+                                src={foto}
+                                alt="Foto del vehículo"
+                                className="w-24 h-24 sm:w-40 sm:h-40 object-contain rounded-lg cursor-zoom-in"
+                            />
+                        }
+                    >
                         <img
                             src={foto}
                             alt="Foto del vehículo"
-                            className="w-24 h-24 sm:w-40 sm:h-40 object-contain rounded-lg cursor-zoom-in transition-all duration-300 active:scale-[5] active:z-50"
+                            className="object-contain rounded-lg cursor-zoom-in"
                         />
-                    </div>
+                    </Modal>
                 </section>
             </div>
 

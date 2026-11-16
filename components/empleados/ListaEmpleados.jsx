@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { List } from "@/components/simpleui";
-import { CardEmpleado } from "@/components/CardEmpleado";
+import { CardEmpleado } from "@/components/empleados/CardEmpleado";
 
 export default async function ListaEmpleados({ departamentoId, vehiculoId }) {
     const empleadosDB = await prisma.empleado.findMany({

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { CardVehiculo } from "@/components/CardVehiculo";
+import { CardVehiculo } from "@/components/vehiculos/CardVehiculo";
 import { List } from "@/components/simpleui";
 
 export default async function ListaVehiculos({ departamentoId, empleadoId }) {

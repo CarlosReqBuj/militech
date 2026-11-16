@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
-import ListaDepartamentos from "@/components/ListaDepartamentos";
+import ListaDepartamentos from "@/components/departamentos/ListaDepartamentos";
 
 export default function Departamentos() {
     return (
@@ -34,8 +34,7 @@ export default function Departamentos() {
                     lg:text-5xl 
                     font-bold 
                     text-yellow-300 
-                    text-center 
-                    break-words"
+                    text-center"
                 >
                     Departamentos
                 </h1>

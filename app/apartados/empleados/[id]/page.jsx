@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import Anterior from "@/components/BotonFlechaAnterior";
-import ListaVehiculos from "@/components/ListaVehiculos";
-import { CardDepartamento } from "@/components/CardDepartamento";
-import BotonEliminarEmpleado from "@/components/BotonEliminarEmpleado";
-import BotonModificarEmpleado from "@/components/BotonModificarEmpleado";
+import ListaVehiculos from "@/components/vehiculos/ListaVehiculos";
+import { CardDepartamento } from "@/components/departamentos/CardDepartamento";
+import BotonEliminarEmpleado from "@/components/empleados/BotonEliminarEmpleado";
+import BotonModificarEmpleado from "@/components/empleados/BotonModificarEmpleado";
 
 export default function Page({ params }) {
     return (

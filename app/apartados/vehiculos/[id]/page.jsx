@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
 import { prisma } from "@/lib/prisma";
-import ListaEmpleados from "@/components/ListaEmpleados";
-import { CardDepartamento } from "@/components/CardDepartamento";
+import ListaEmpleados from "@/components/empleados/ListaEmpleados";
+import { CardDepartamento } from "@/components/departamentos/CardDepartamento";
 
 export default function Page({ params }) {
     return (

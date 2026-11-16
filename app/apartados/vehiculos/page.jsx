@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
-import ListaVehiculos from "@/components/ListaVehiculos";
-import BotonAñadirVehiculo from "@/components/BotonAñadirVehiculo";
+import ListaVehiculos from "@/components/vehiculos/ListaVehiculos";
+import BotonAñadirVehiculo from "@/components/vehiculos/BotonAñadirVehiculo";
 
 export default function Vehiculos() {
     return (

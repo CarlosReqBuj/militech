@@ -62,7 +62,7 @@ model Vehiculo {
   modelo         String
   tipo           TipoVehiculo
   operativo      Boolean      @default(true)
-  foto           String
+  foto           String?
 
   departamentoId Int
   departamento   Departamento @relation(fields: [departamentoId], references: [id])

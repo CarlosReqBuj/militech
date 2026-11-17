@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
+
 import BotonGenerico from "@/components/BotonGenerico";
 import { InputImage } from "@/components/simpleui";
 import { crearVehiculo } from "@/actions/vehiculos";
@@ -26,18 +27,26 @@ function BotonEnviar() {
 
 export default function BotonAñadirVehiculo({ departamentos = [] }) {
     const dialogRef = useRef(null);
+    const formRef = useRef(null);
 
-    async function enviar(formData) {
-        const res = await crearVehiculo(formData);
+    const [state, formAction, pending] = useActionState(crearVehiculo, null);
 
-        if (res?.error) {
-            toast.error(res.error);
+    // Gestionar respuesta del servidor
+    useEffect(() => {
+        if (!state) return;
+
+        if (state.error) {
+            toast.error(state.error);
             return;
         }
 
-        toast.success("Vehículo añadido");
-        dialogRef.current?.close();
-    }
+        if (state.type === "success") {
+            toast.success(state.message);
+
+            formRef.current?.reset();
+            dialogRef.current?.close();
+        }
+    }, [state]);
 
     return (
         <>
@@ -54,7 +63,11 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
                         Nuevo vehículo
                     </h2>
 
-                    <form action={enviar} className="flex flex-col gap-4">
+                    <form
+                        ref={formRef}
+                        action={formAction}
+                        className="flex flex-col gap-4"
+                    >
                         {/* Matrícula, marca y modelo */}
 
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -156,8 +169,10 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
 
                         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
                             <BotonGenerico
+                                type="button"
                                 variante="secundario"
                                 className="sm:w-auto"
+                                disabled={pending}
                                 onClick={() => dialogRef.current?.close()}
                             >
                                 Cancelar

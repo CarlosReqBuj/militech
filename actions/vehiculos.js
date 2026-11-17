@@ -5,6 +5,10 @@ import { prisma } from "@/lib/prisma";
 import cloudinary from "@/lib/cloudinary";
 import path from "node:path";
 
+// ==========================================
+// SUBIR IMAGEN A CLOUDINARY
+// ==========================================
+
 async function imageUpload(file) {
     try {
         const buffer = Buffer.from(await file.arrayBuffer());
@@ -12,13 +16,17 @@ async function imageUpload(file) {
         const result = await new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
                 {
-                    invalidate: true,
                     asset_folder: "vehiculos",
-                    public_id: path.parse(file.name).name,
-                    width: 512,
-                    height: 512,
-                    crop: "fill",
-                    gravity: "auto",
+                    public_id: `${Date.now()}-${path.parse(file.name).name}`,
+                    transformation: [
+                        {
+                            width: 512,
+                            height: 512,
+                            crop: "fill",
+                            gravity: "auto",
+                        },
+                    ],
+                    invalidate: true,
                 },
                 (error, result) => {
                     if (error) reject(error);
@@ -29,51 +37,108 @@ async function imageUpload(file) {
             stream.end(buffer);
         });
 
-        console.log("URL de Cloudinary:", result.secure_url);
-
         return result.secure_url;
     } catch (error) {
-        console.error("Error al subir imagen:", error);
+        console.error("Error Cloudinary:", error);
         return null;
     }
 }
 
-// Crear vehículo
+// ==========================================
+// VALIDAR FOTOGRAFÍA
+// ==========================================
+
+function validarImagen(file) {
+    if (!file || file.size === 0) {
+        return null;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        return "El archivo debe ser una imagen";
+    }
+
+    if (file.size > 1024 * 1024) {
+        return "La imagen no puede superar 1 MB";
+    }
+
+    return true;
+}
+
+// ==========================================
+// CREAR VEHÍCULO
+// ==========================================
+
 export async function crearVehiculo(prevState, formData) {
     try {
         const matricula = formData.get("matricula")?.trim().toUpperCase();
 
+        const marca = formData.get("marca")?.trim();
+        const modelo = formData.get("modelo")?.trim();
+        const tipo = formData.get("tipo")?.trim();
+
+        const departamentoId = Number(formData.get("departamentoId"));
+
+        const operativo = formData.get("operativo") === "on";
+
+        // Validar campos
+        if (!matricula || !marca || !modelo || !tipo) {
+            return {
+                error: "Todos los campos obligatorios deben estar completos",
+            };
+        }
+
+        if (!Number.isInteger(departamentoId) || departamentoId <= 0) {
+            return {
+                error: "Selecciona un departamento válido",
+            };
+        }
+
+        // Comprobar matrícula
         const existente = await prisma.vehiculo.findUnique({
             where: { matricula },
         });
 
         if (existente) {
-            return { error: "Ya existe un vehículo con esa matrícula" };
+            return {
+                error: "Ya existe un vehículo con esa matrícula",
+            };
         }
 
+        // Procesar fotografía
         let foto = formData.get("foto");
 
-        if (foto && foto.size > 0) {
+        const validacion = validarImagen(foto);
+
+        if (typeof validacion === "string") {
+            return { error: validacion };
+        }
+
+        if (validacion === true) {
             foto = await imageUpload(foto);
 
             if (!foto) {
-                return { error: "No se pudo subir la fotografía" };
+                return {
+                    error: "No se pudo subir la fotografía",
+                };
             }
         } else {
             foto = null;
         }
 
-        await prisma.vehiculo.create({
+        // Crear vehículo
+        const vehiculo = await prisma.vehiculo.create({
             data: {
                 matricula,
-                marca: formData.get("marca"),
-                modelo: formData.get("modelo"),
-                tipo: formData.get("tipo"),
-                operativo: formData.get("operativo") === "on",
+                marca,
+                modelo,
+                tipo,
+                operativo,
                 foto,
-                departamentoId: Number(formData.get("departamentoId")),
+                departamentoId,
             },
         });
+
+        console.log("Vehículo creado correctamente:", vehiculo.id);
 
         revalidatePath("/apartados/vehiculos");
 
@@ -81,21 +146,40 @@ export async function crearVehiculo(prevState, formData) {
             type: "success",
             message: "Vehículo registrado correctamente",
         };
-    } catch (e) {
-        console.error("Error al crear vehículo:", e);
+    } catch (error) {
+        console.error("Error al crear vehículo:", error);
 
-        if (e.code === "P2002") {
-            return { error: "Ya existe un vehículo con esa matrícula" };
+        if (error.code === "P2002") {
+            return {
+                error: "Ya existe un vehículo con esa matrícula",
+            };
         }
 
-        return { error: "No se pudo registrar el vehículo" };
+        if (error.code === "P2003") {
+            return {
+                error: "El departamento seleccionado no existe",
+            };
+        }
+
+        return {
+            error: "No se pudo registrar el vehículo. Comprueba los datos.",
+        };
     }
 }
 
-// Eliminar vehículo
+// ==========================================
+// ELIMINAR VEHÍCULO
+// ==========================================
+
 export async function eliminarVehiculo(prevState, formData) {
     try {
         const id = Number(formData.get("id"));
+
+        if (!Number.isInteger(id) || id <= 0) {
+            return {
+                error: "Identificador de vehículo no válido",
+            };
+        }
 
         await prisma.vehiculo.delete({
             where: { id },
@@ -107,26 +191,70 @@ export async function eliminarVehiculo(prevState, formData) {
             type: "success",
             message: "Vehículo eliminado correctamente",
         };
-    } catch (e) {
-        console.error("Error al eliminar vehículo:", e);
+    } catch (error) {
+        console.error("Error al eliminar vehículo:", error);
 
-        if (e.code === "P2025") {
-            return { error: "El vehículo ya no existe" };
+        if (error.code === "P2025") {
+            return {
+                error: "El vehículo ya no existe",
+            };
         }
 
-        return { error: "No se pudo eliminar el vehículo" };
+        return {
+            error: "No se pudo eliminar el vehículo",
+        };
     }
 }
 
-// Actualizar vehículo
+// ==========================================
+// ACTUALIZAR VEHÍCULO
+// ==========================================
 
 export async function actualizarVehiculo(id, formData) {
     try {
         id = Number(id);
 
+        if (!Number.isInteger(id) || id <= 0) {
+            return {
+                error: "Identificador de vehículo no válido",
+            };
+        }
+
         const matricula = formData.get("matricula")?.trim().toUpperCase();
 
-        // Comprobar que la matrícula no pertenece a otro vehículo
+        const marca = formData.get("marca")?.trim();
+        const modelo = formData.get("modelo")?.trim();
+        const tipo = formData.get("tipo")?.trim();
+
+        const departamentoId = Number(formData.get("departamentoId"));
+
+        const operativo = formData.get("operativo") === "on";
+
+        // Validar campos
+        if (!matricula || !marca || !modelo || !tipo) {
+            return {
+                error: "Todos los campos obligatorios deben estar completos",
+            };
+        }
+
+        if (!Number.isInteger(departamentoId) || departamentoId <= 0) {
+            return {
+                error: "Selecciona un departamento válido",
+            };
+        }
+
+        // Comprobar que existe el vehículo
+        const vehiculoActual = await prisma.vehiculo.findUnique({
+            where: { id },
+        });
+
+        if (!vehiculoActual) {
+            return {
+                error: "El vehículo no existe",
+            };
+        }
+
+        // Comprobar matrícula duplicada
         const existente = await prisma.vehiculo.findFirst({
             where: {
                 matricula,
@@ -142,18 +270,16 @@ export async function actualizarVehiculo(id, formData) {
             };
         }
 
+        // Procesar fotografía
         let foto = formData.get("foto");
 
-        // Subir únicamente si se ha seleccionado una fotografía nueva
-        if (foto && foto.size > 0) {
-            if (!foto.type.startsWith("image/")) {
-                return { error: "El archivo debe ser una imagen" };
-            }
+        const validacion = validarImagen(foto);
 
-            if (foto.size > 1024 * 1024) {
-                return { error: "La imagen no puede superar 1 MB" };
-            }
+        if (typeof validacion === "string") {
+            return { error: validacion };
+        }
 
+        if (validacion === true) {
             foto = await imageUpload(foto);
 
             if (!foto) {
@@ -162,19 +288,21 @@ export async function actualizarVehiculo(id, formData) {
                 };
             }
         } else {
-            foto = undefined;
+            // Mantener la fotografía anterior
+            foto = vehiculoActual.foto;
         }
 
+        // Actualizar vehículo
         await prisma.vehiculo.update({
             where: { id },
             data: {
                 matricula,
-                marca: formData.get("marca"),
-                modelo: formData.get("modelo"),
-                tipo: formData.get("tipo"),
-                operativo: formData.get("operativo") === "on",
-                ...(foto !== undefined && { foto }),
-                departamentoId: Number(formData.get("departamentoId")),
+                marca,
+                modelo,
+                tipo,
+                operativo,
+                foto,
+                departamentoId,
             },
         });
 
@@ -185,19 +313,29 @@ export async function actualizarVehiculo(id, formData) {
             type: "success",
             message: "Vehículo actualizado correctamente",
         };
-    } catch (e) {
-        console.error("Error al actualizar vehículo:", e);
+    } catch (error) {
+        console.error("Error al actualizar vehículo:", error);
 
-        if (e.code === "P2002") {
+        if (error.code === "P2002") {
             return {
                 error: "Ya existe otro vehículo con esa matrícula",
             };
         }
 
-        if (e.code === "P2025") {
-            return { error: "El vehículo ya no existe" };
+        if (error.code === "P2003") {
+            return {
+                error: "El departamento seleccionado no existe",
+            };
         }
 
-        return { error: "No se pudo modificar el vehículo" };
+        if (error.code === "P2025") {
+            return {
+                error: "El vehículo ya no existe",
+            };
+        }
+
+        return {
+            error: "No se pudo modificar el vehículo",
+        };
     }
 }

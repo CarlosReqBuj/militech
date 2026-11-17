@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import BotonGenerico from "@/components/BotonGenerico";
+import { InputImage } from "@/components/simpleui";
 import { actualizarVehiculo } from "@/actions/vehiculos";
 
 const inputClase =
@@ -35,7 +36,6 @@ export default function BotonModificarVehiculo({
 
         if (res?.error) {
             toast.error(res.error);
-            dialogRef.current?.close();
             return;
         }
 
@@ -45,7 +45,7 @@ export default function BotonModificarVehiculo({
 
     return (
         <>
-            <BotonGenerico onClick={() => dialogRef.current.showModal()}>
+            <BotonGenerico onClick={() => dialogRef.current?.showModal()}>
                 Modificar vehículo
             </BotonGenerico>
 
@@ -60,7 +60,7 @@ export default function BotonModificarVehiculo({
                     </h2>
 
                     <form
-                        key={JSON.stringify(vehiculo)}
+                        key={vehiculo.id}
                         ref={formRef}
                         action={enviar}
                         className="flex flex-col gap-4"
@@ -151,22 +151,20 @@ export default function BotonModificarVehiculo({
                             </label>
                         </div>
 
-                        <label className={labelClase}>
-                            Foto (URL, opcional)
-                            <input
-                                name="foto"
-                                defaultValue={vehiculo.foto ?? ""}
-                                placeholder="https://..."
-                                className={inputClase}
-                            />
-                        </label>
+                        <InputImage
+                            name="foto"
+                            label="Fotografía del vehículo"
+                            value={vehiculo.foto ?? ""}
+                            width={320}
+                            height={200}
+                        />
 
                         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
                             <BotonGenerico
                                 type="button"
                                 variante="secundario"
                                 className="sm:w-auto"
-                                onClick={() => dialogRef.current.close()}
+                                onClick={() => dialogRef.current?.close()}
                             >
                                 Cancelar
                             </BotonGenerico>

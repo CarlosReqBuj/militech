@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import BotonGenerico from "@/components/BotonGenerico";
+import { InputImage } from "@/components/simpleui";
 import { crearVehiculo } from "@/actions/vehiculos";
 
 const inputClase =
@@ -31,7 +32,6 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
 
         if (res?.error) {
             toast.error(res.error);
-            dialogRef.current?.close();
             return;
         }
 
@@ -56,6 +56,7 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
 
                     <form action={enviar} className="flex flex-col gap-4">
                         {/* Matrícula, marca y modelo */}
+
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                             <label className={labelClase}>
                                 Matrícula
@@ -89,6 +90,7 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
                         </div>
 
                         {/* Tipo, departamento y estado */}
+
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                             <label className={labelClase}>
                                 Tipo
@@ -98,20 +100,12 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
                                     defaultValue=""
                                     className={inputClase}
                                 >
-                                    <option
-                                        value=""
-                                        disabled
-                                        className="bg-neutral-950"
-                                    >
+                                    <option value="" disabled>
                                         Selecciona...
                                     </option>
 
                                     {TIPOS.map((t) => (
-                                        <option
-                                            key={t}
-                                            value={t}
-                                            className="bg-neutral-950"
-                                        >
+                                        <option key={t} value={t}>
                                             {t}
                                         </option>
                                     ))}
@@ -126,20 +120,12 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
                                     defaultValue=""
                                     className={inputClase}
                                 >
-                                    <option
-                                        value=""
-                                        disabled
-                                        className="bg-neutral-950"
-                                    >
+                                    <option value="" disabled>
                                         Selecciona...
                                     </option>
 
                                     {departamentos.map((d) => (
-                                        <option
-                                            key={d.id}
-                                            value={d.id}
-                                            className="bg-neutral-950"
-                                        >
+                                        <option key={d.id} value={d.id}>
                                             {d.nombre}
                                         </option>
                                     ))}
@@ -157,17 +143,17 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
                             </label>
                         </div>
 
-                        {/* Foto */}
-                        <label className={labelClase}>
-                            Foto (URL, opcional)
-                            <input
-                                name="foto"
-                                className={inputClase}
-                                placeholder="https://..."
-                            />
-                        </label>
+                        {/* Fotografía */}
+
+                        <InputImage
+                            name="foto"
+                            label="Fotografía del vehículo"
+                            width={320}
+                            height={200}
+                        />
 
                         {/* Botones */}
+
                         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
                             <BotonGenerico
                                 variante="secundario"

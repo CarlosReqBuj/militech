@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import ListaEmpleados from "@/components/empleados/ListaEmpleados";
 import { CardDepartamento } from "@/components/departamentos/CardDepartamento";
 import { Modal } from "@/components/simpleui";
+import BotonEliminarVehiculo from "@/components/vehiculos/BotonEliminarVehiculo";
+import BotonModificarVehiculo from "@/components/vehiculos/BotonModificarVehiculo";
 
 export default function Page({ params }) {
     return (
@@ -39,14 +41,14 @@ export default function Page({ params }) {
                     text-yellow-300 
                     text-center"
                 >
-                    Vehiculo
+                    Vehículo
                 </h1>
 
                 <div className="w-full max-w-6xl">
                     <Suspense
                         fallback={
                             <p className="text-center text-yellow-300">
-                                Cargando vehiculo...
+                                Cargando vehículo...
                             </p>
                         }
                     >
@@ -62,10 +64,13 @@ async function InfoVehiculo({ params }) {
     const { id } = await params;
     const vehiculoId = Number(id);
 
-    const vehiculo = await prisma.vehiculo.findUnique({
-        where: { id: vehiculoId },
-        include: { departamento: true },
-    });
+    const [vehiculo, departamentos] = await Promise.all([
+        prisma.vehiculo.findUnique({
+            where: { id: vehiculoId },
+            include: { departamento: true },
+        }),
+        prisma.departamento.findMany({ orderBy: { nombre: "asc" } }),
+    ]);
 
     if (!vehiculo) {
         return (
@@ -80,45 +85,84 @@ async function InfoVehiculo({ params }) {
 
     return (
         <div className="flex w-full flex-col gap-6 sm:gap-8">
+            <div
+                className="
+                mb-2
+                flex
+                w-full
+                flex-col-reverse
+                gap-3
+                sm:flex-row
+                sm:items-center
+                sm:justify-end
+                sm:gap-4"
+            >
+                <div className="w-full sm:w-auto sm:min-w-160px">
+                    <BotonEliminarVehiculo
+                        id={vehiculoId}
+                        matricula={matricula}
+                    />
+                </div>
+
+                <div className="w-full sm:w-auto sm:min-w-160px">
+                    <BotonModificarVehiculo
+                        vehiculo={{
+                            id: vehiculo.id,
+                            matricula,
+                            marca,
+                            modelo,
+                            tipo,
+                            operativo,
+                            foto,
+                            departamentoId: vehiculo.departamentoId,
+                        }}
+                        departamentos={departamentos}
+                    />
+                </div>
+            </div>
+
             <div>
-                <section className="flex justify-start items-center gap-4 sm:gap-8 w-fit max-w-full rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                <section className="flex w-full min-w-0 items-center gap-2 self-start rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
                     <div className="min-w-0">
-                        <h2 className="text-xl sm:text-3xl font-bold text-yellow-300">
+                        <h2 className="text-xl font-bold text-yellow-300 sm:text-3xl">
                             {matricula}
                         </h2>
-                        <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        <p className="mt-2 text-sm text-gray-300 sm:text-base">
                             Marca: {marca}
                         </p>
-                        <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        <p className="mt-2 text-sm text-gray-300 sm:text-base">
                             Modelo: {modelo}
                         </p>
-                        <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        <p className="mt-2 text-sm text-gray-300 sm:text-base">
                             Tipo: {tipo}
                         </p>
-                        <p className="mt-2 text-sm sm:text-base text-gray-300">
+                        <p className="mt-2 text-sm text-gray-300 sm:text-base">
                             Estado: {operativo ? "operativo" : "no disponible"}
                         </p>
                     </div>
-                    <Modal
-                        trigger={
+
+                    {foto && (
+                        <Modal
+                            trigger={
+                                <img
+                                    src={foto}
+                                    alt="Foto del vehículo"
+                                    className="h-24 w-24 shrink-0 cursor-zoom-in rounded-lg object-contain sm:h-40 sm:w-40"
+                                />
+                            }
+                        >
                             <img
                                 src={foto}
                                 alt="Foto del vehículo"
-                                className="w-24 h-24 sm:w-40 sm:h-40 object-contain rounded-lg cursor-zoom-in"
+                                className="rounded-lg object-contain"
                             />
-                        }
-                    >
-                        <img
-                            src={foto}
-                            alt="Foto del vehículo"
-                            className="object-contain rounded-lg cursor-zoom-in"
-                        />
-                    </Modal>
+                        </Modal>
+                    )}
                 </section>
             </div>
 
             <div className="grid grid-cols-1 gap-6 lg:gap-8">
-                <section className="self-start min-w-0 rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                <section className="min-w-0 self-start rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
                     <div className="mb-4 text-xl font-bold text-yellow-300">
                         Departamento
                     </div>

@@ -171,9 +171,9 @@ export async function crearVehiculo(prevState, formData) {
 // ELIMINAR VEHÍCULO
 // ==========================================
 
-export async function eliminarVehiculo(prevState, formData) {
+export async function eliminarVehiculo(id) {
     try {
-        const id = Number(formData.get("id"));
+        id = Number(id);
 
         if (!Number.isInteger(id) || id <= 0) {
             return {
@@ -181,6 +181,18 @@ export async function eliminarVehiculo(prevState, formData) {
             };
         }
 
+        // Comprobar que existe
+        const vehiculo = await prisma.vehiculo.findUnique({
+            where: { id },
+        });
+
+        if (!vehiculo) {
+            return {
+                error: "El vehículo no existe",
+            };
+        }
+
+        // Eliminar vehículo
         await prisma.vehiculo.delete({
             where: { id },
         });
@@ -197,6 +209,12 @@ export async function eliminarVehiculo(prevState, formData) {
         if (error.code === "P2025") {
             return {
                 error: "El vehículo ya no existe",
+            };
+        }
+
+        if (error.code === "P2003") {
+            return {
+                error: "No se puede eliminar el vehículo porque tiene registros relacionados",
             };
         }
 

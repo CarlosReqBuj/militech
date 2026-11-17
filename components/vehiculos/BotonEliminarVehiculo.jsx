@@ -3,34 +3,49 @@
 import { useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
 import { eliminarVehiculo } from "@/actions/vehiculos";
 import BotonGenerico from "@/components/BotonGenerico";
 
 export default function BotonEliminarVehiculo({ id, matricula }) {
     const dialogRef = useRef(null);
     const router = useRouter();
+
     const [pending, startTransition] = useTransition();
 
     function confirmar() {
+        if (pending) return;
+
         startTransition(async () => {
-            const res = await eliminarVehiculo(id);
+            try {
+                const res = await eliminarVehiculo(id);
 
-            if (res?.error) {
-                toast.error(res.error);
-                return;
+                if (res?.error) {
+                    toast.error(res.error);
+                    return;
+                }
+
+                if (res?.type === "success") {
+                    toast.success(res.message);
+
+                    dialogRef.current?.close();
+
+                    router.push("/apartados/vehiculos");
+                    router.refresh();
+                }
+            } catch (error) {
+                console.error("Error al eliminar:", error);
+                toast.error("Ha ocurrido un error al eliminar el vehículo");
             }
-
-            toast.success("Vehículo eliminado");
-            dialogRef.current.close();
-            router.push("/apartados/vehiculos");
         });
     }
 
     return (
         <>
             <BotonGenerico
+                type="button"
                 variante="rojo"
-                onClick={() => dialogRef.current.showModal()}
+                onClick={() => dialogRef.current?.showModal()}
             >
                 Eliminar vehículo
             </BotonGenerico>
@@ -54,15 +69,17 @@ export default function BotonEliminarVehiculo({ id, matricula }) {
 
                     <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-center">
                         <BotonGenerico
+                            type="button"
                             variante="secundario"
                             disabled={pending}
                             className="sm:w-auto"
-                            onClick={() => dialogRef.current.close()}
+                            onClick={() => dialogRef.current?.close()}
                         >
                             Cancelar
                         </BotonGenerico>
 
                         <BotonGenerico
+                            type="button"
                             variante="rojo"
                             disabled={pending}
                             className="sm:w-auto border-4 border-red-500 hover:bg-red-500 hover:text-black"

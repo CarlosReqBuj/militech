@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 import cloudinary from "@/lib/cloudinary";
 import path from "node:path";
 
-// Subir fotografía a Cloudinary
 async function imageUpload(file) {
     try {
         const buffer = Buffer.from(await file.arrayBuffer());

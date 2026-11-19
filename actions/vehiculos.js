@@ -5,10 +5,6 @@ import { prisma } from "@/lib/prisma";
 import cloudinary from "@/lib/cloudinary";
 import path from "node:path";
 
-// ==========================================
-// SUBIR IMAGEN A CLOUDINARY
-// ==========================================
-
 async function imageUpload(file) {
     try {
         const buffer = Buffer.from(await file.arrayBuffer());
@@ -44,10 +40,6 @@ async function imageUpload(file) {
     }
 }
 
-// ==========================================
-// VALIDAR FOTOGRAFÍA
-// ==========================================
-
 function validarImagen(file) {
     if (!file || file.size === 0) {
         return null;
@@ -63,10 +55,6 @@ function validarImagen(file) {
 
     return true;
 }
-
-// ==========================================
-// CREAR VEHÍCULO
-// ==========================================
 
 export async function crearVehiculo(prevState, formData) {
     try {
@@ -167,10 +155,6 @@ export async function crearVehiculo(prevState, formData) {
     }
 }
 
-// ==========================================
-// ELIMINAR VEHÍCULO
-// ==========================================
-
 export async function eliminarVehiculo(id) {
     try {
         id = Number(id);
@@ -223,10 +207,6 @@ export async function eliminarVehiculo(id) {
         };
     }
 }
-
-// ==========================================
-// ACTUALIZAR VEHÍCULO
-// ==========================================
 
 export async function actualizarVehiculo(id, formData) {
     try {

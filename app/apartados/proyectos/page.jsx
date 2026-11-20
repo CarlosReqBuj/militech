@@ -1,10 +1,13 @@
 import { Suspense } from "react";
 import AnteriorRojo from "@/components/BotonFlechaAnteriorRojo";
 import ListaProyectos from "@/components/proyectos/ListaProyectos";
+import AnimacionMuroNegro from "@/components/proyectos/AnimacionMuroNegro";
 
 export default function Proyectos() {
     return (
         <main className="min-h-dvh bg-transparent p-3 sm:p-5">
+            <AnimacionMuroNegro />
+
             <div
                 className="
                 relative 

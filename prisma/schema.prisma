@@ -13,12 +13,27 @@ enum TipoVehiculo {
   TRANSPORTE
 }
 
+enum EstadoProyecto {
+  PLANIFICADO
+  EN_CURSO
+  PAUSADO
+  COMPLETADO
+  CANCELADO
+}
+
+enum NivelSecreto {
+  CONFIDENCIAL
+  SECRETO
+  ULTRASECRETO
+}
+
 model Departamento {
   id          Int        @id @default(autoincrement())
   nombre      String     @unique
   descripcion String?
   empleados   Empleado[]
   vehiculos   Vehiculo[]
+  proyectos   Proyecto[]
 
   @@map("departamentos")
 }
@@ -49,6 +64,7 @@ model Empleado {
   cargo          Cargo        @relation(fields: [cargoId], references: [id])
 
   vehiculos      Vehiculo[]   @relation("EmpleadoVehiculos")
+  proyectos      Proyecto[]   @relation("EmpleadoProyectos")
 
   @@index([departamentoId])
   @@index([cargoId])
@@ -71,4 +87,24 @@ model Vehiculo {
 
   @@index([departamentoId])
   @@map("vehiculos")
+}
+
+model Proyecto {
+  id             Int            @id @default(autoincrement())
+  codigo         String         @unique // nombre en clave
+  nombre         String
+  descripcion    String?
+  estado         EstadoProyecto @default(PLANIFICADO)
+  nivelSecreto   NivelSecreto   @default(SECRETO)
+  presupuesto    Decimal        @db.Decimal(14, 2)
+  fechaInicio    DateTime       @default(now())
+  fechaFin       DateTime?
+
+  departamentoId Int
+  departamento   Departamento   @relation(fields: [departamentoId], references: [id])
+
+  empleados      Empleado[]     @relation("EmpleadoProyectos")
+
+  @@index([departamentoId])
+  @@map("proyectos")
 }

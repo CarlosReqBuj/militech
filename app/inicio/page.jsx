@@ -35,7 +35,10 @@ export default function Inicio() {
                     text-center"
                 >
                     Bienvenido a{" "}
-                    <Link href="/proyectos" className="cursor-default">
+                    <Link
+                        href="/apartados/proyectos"
+                        className="cursor-default"
+                    >
                         Militech
                     </Link>
                 </h1>

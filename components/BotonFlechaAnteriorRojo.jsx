@@ -8,7 +8,7 @@ export default function AnteriorRojo() {
         <button
             onClick={() => router.back()}
             aria-label="Volver"
-            className="fixed top-6 left-6 sm:top-10 sm:left-10 z-50 w-12 h-12 flex items-center justify-center bg-red-600 hover:bg-red-400 rounded-full text-black transition-all duration-200 hover:shadow-lg hover:shadow-red-600/50 active:scale-90"
+            className="fixed top-6 left-6 sm:top-10 sm:left-10 z-50 w-12 h-12 flex items-center justify-center bg-red-600 hover:bg-red-500 rounded-full text-black transition-all duration-200 hover:shadow-lg hover:shadow-red-600/50 active:scale-90"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"

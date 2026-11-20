@@ -117,7 +117,6 @@ body::before {
     }
 }
 
-/* Título con glitch */
 .muro-titulo {
     position: relative;
     font-family: monospace;
@@ -189,7 +188,6 @@ body::before {
     }
 }
 
-/* Terminal */
 .muro-terminal {
     display: flex;
     flex-direction: column;
@@ -218,7 +216,6 @@ body::before {
     }
 }
 
-/* Barra de barrido y líneas de escaneo */
 .muro-barra {
     position: absolute;
     left: 0;

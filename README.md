@@ -6,7 +6,7 @@ Militech es una aplicación web desarrollada como proyecto del módulo de Desarr
 
 Permite gestionar de forma centralizada los departamentos, empleados, cargos, vehículos y proyectos de una organización mediante una interfaz web personalizada, una base de datos relacional y servicios externos de almacenamiento de imágenes.
 
-**Aplicación desplegada:** https://militech-gules.vercel.app/
+**Aplicación desplegada:** https://militech.carlosrb.es https://militech-gules.vercel.app/
 
 **Repositorio:** https://github.com/CarlosReqBuj/militech
 

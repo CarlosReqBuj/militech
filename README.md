@@ -1,111 +1,218 @@
-<div align="center">
+# Militech
 
-# ⚡ MILITECH ⚡
+### Aplicación web de gestión corporativa
 
-**Panel web de gestión corporativa para Militech Corporation**
+Militech es una aplicación web desarrollada como proyecto del módulo de Desarrollo Web en Entorno Servidor (DWES).
 
-Departamentos · Empleados · Vehículos
+Permite gestionar de forma centralizada los departamentos, empleados, cargos, vehículos y proyectos de una organización mediante una interfaz web personalizada, una base de datos relacional y servicios externos de almacenamiento de imágenes.
 
-<br />
+**Aplicación desplegada:** https://militech-gules.vercel.app/
 
-![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![Prisma](https://img.shields.io/badge/Prisma-7-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-
-</div>
+**Repositorio:** https://github.com/CarlosReqBuj/militech
 
 ---
 
-## 📖 Descripción
+## Funcionalidades
 
-**Militech** es una aplicación web construida con **Next.js (App Router)** que permite consultar y organizar la información de una corporación: sus **departamentos**, los **empleados** que trabajan en ellos y la **flota de vehículos** asignada.
+### Gestión de departamentos
 
-La interfaz tiene una estética oscura con acentos amarillos, y los datos se leen directamente desde una base de datos **PostgreSQL** mediante **Prisma**.
+- Consulta y administración de departamentos.
+- Organización de las diferentes áreas de la empresa.
+- Relación con empleados, vehículos y proyectos.
 
-## ✨ Características
+### Gestión de empleados
 
-- 🏢 **Departamentos**: listado con su descripción, empleados y vehículos asociados.
-- 👤 **Empleados**: ficha con nombre, apellidos, alias, email, salario, fecha de alta, cargo y estado (activo/inactivo).
-- 🚙 **Vehículos**: matrícula, marca, modelo, tipo (terrestre, blindado, aéreo o transporte) y estado operativo.
-- 🎖️ **Cargos** jerárquicos con nivel (1 = más bajo, mayor número = más alto).
-- 🔎 Listados con **ordenación y tarjetas** reutilizables gracias a la librería de componentes interna *SimpleUI*.
-- 🌗 Soporte de **tema claro/oscuro** con `next-themes`.
-- 🔔 **Notificaciones flotantes** (toasts) con `sonner`.
-- ⚡ Renderizado moderno con **Suspense**, `cacheComponents` y **prefetch parcial** de Next.js.
+- Creación, consulta, modificación y eliminación de empleados.
+- Gestión de información personal y profesional.
+- Asignación de departamentos y cargos.
+- Gestión de salarios y estado laboral.
+- Asociación con vehículos y proyectos.
 
-## 🧰 Stack tecnológico
+### Gestión de vehículos
 
-| Capa | Tecnología |
-| --- | --- |
-| **Framework** | [Next.js 16](https://nextjs.org/) (App Router, Turbopack) |
-| **UI** | [React 19](https://react.dev/) |
-| **Estilos** | [Tailwind CSS 4](https://tailwindcss.com/) con `@tailwindcss/turbopack` |
-| **Base de datos** | [PostgreSQL](https://www.postgresql.org/) |
-| **ORM** | [Prisma 7](https://www.prisma.io/) con `@prisma/adapter-pg` y `pg` |
-| **Componentes** | SimpleUI (`components/simpleui`, v0.5.3) |
-| **Temas** | [next-themes](https://github.com/pacocoursey/next-themes) |
-| **Notificaciones** | [Sonner](https://sonner.emilkowal.ski/) |
-| **Tipografía** | [Geist](https://vercel.com/font) (`next/font`) |
-| **Calidad de código** | ESLint 9 + `eslint-config-next` |
-| **Lenguaje** | JavaScript (JSX) con configuración de TypeScript 5 |
+- Registro y administración de vehículos.
+- Información de marca, modelo y matrícula.
+- Clasificación por tipo de vehículo.
+- Gestión de fotografías mediante Cloudinary.
+- Asociación con departamentos y empleados.
 
-## 🗄️ Modelo de datos
+### Gestión de cargos
 
-```
-Departamento 1 ──── N Empleado N ──── 1 Cargo
-     │                   │
-     └──── 1 ── N Vehiculo ── N ──── N Empleado
-```
+- Definición de puestos y niveles jerárquicos.
+- Asociación de cargos con empleados.
 
-| Modelo | Campos principales |
-| --- | --- |
-| `Departamento` | `nombre` (único), `descripcion` |
-| `Cargo` | `nombre` (único), `nivel` (único) |
-| `Empleado` | `nombre`, `apellidos`, `alias`, `email` (único), `salario`, `fechaAlta`, `activo`, `departamento`, `cargo` |
-| `Vehiculo` | `matricula` (única), `marca` (por defecto *Militech*), `modelo`, `tipo`, `operativo`, `departamento` |
+### Gestión de proyectos
 
-Tipos de vehículo (`TipoVehiculo`): `TERRESTRE`, `BLINDADO`, `AEREO`, `TRANSPORTE`.
+- Registro y administración de proyectos.
+- Identificación mediante códigos.
+- Gestión de presupuestos y fechas.
+- Seguimiento de estados.
+- Clasificación por niveles de confidencialidad.
+- Asociación de empleados y departamentos.
 
-## 📁 Estructura del proyecto
+---
 
-```
+## Tecnologías utilizadas
+
+| Tecnología     | Función                                 |
+| -------------- | --------------------------------------- |
+| Next.js 16     | Framework de desarrollo web             |
+| React 19       | Construcción de interfaces              |
+| JavaScript     | Lenguaje principal                      |
+| Tailwind CSS 4 | Diseño y estilos                        |
+| PostgreSQL     | Base de datos relacional                |
+| Neon           | Servicio de PostgreSQL en la nube       |
+| Prisma ORM 7   | Acceso y gestión de datos               |
+| Cloudinary     | Almacenamiento de imágenes              |
+| Server Actions | Ejecución de operaciones en el servidor |
+| Sonner         | Sistema de notificaciones               |
+| next-themes    | Gestión de temas                        |
+| ESLint         | Análisis del código                     |
+
+---
+
+## Base de datos
+
+El proyecto utiliza PostgreSQL alojado en Neon para almacenar la información de la aplicación.
+
+La gestión y consulta de los datos se realiza mediante Prisma ORM, que permite definir modelos, relaciones y restricciones dentro del esquema de la base de datos.
+
+### Entidades principales
+
+| Entidad      | Descripción                          |
+| ------------ | ------------------------------------ |
+| Departamento | Áreas organizativas de la empresa    |
+| Empleado     | Trabajadores de la organización      |
+| Cargo        | Puestos y jerarquía corporativa      |
+| Vehículo     | Vehículos de la empresa              |
+| Proyecto     | Proyectos y operaciones corporativas |
+
+### Relaciones entre entidades
+
+El modelo de datos incorpora relaciones de tipo uno a muchos (1:N) y muchos a muchos (N:M).
+
+**Relaciones 1:N:**
+
+- Departamento y empleados.
+- Departamento y vehículos.
+- Departamento y proyectos.
+- Cargo y empleados.
+
+**Relaciones N:M:**
+
+- Empleados y vehículos.
+- Empleados y proyectos.
+
+Estas relaciones permiten representar la estructura de la organización y mantener la integridad de los datos.
+
+### Enumeraciones
+
+**Tipos de vehículos:**
+
+- TERRESTRE
+- BLINDADO
+- AEREO
+- TRANSPORTE
+
+**Estados de proyectos:**
+
+- PLANIFICADO
+- EN_CURSO
+- PAUSADO
+- COMPLETADO
+- CANCELADO
+
+**Niveles de confidencialidad:**
+
+- CONFIDENCIAL
+- SECRETO
+- ULTRASECRETO
+
+---
+
+## Gestión de imágenes
+
+La aplicación utiliza Cloudinary como servicio externo de almacenamiento y gestión de imágenes.
+
+La integración se realiza mediante Server Actions, que permiten ejecutar las operaciones desde el servidor.
+
+El proceso contempla:
+
+1. Selección de imágenes desde los formularios.
+2. Procesamiento de las solicitudes en el servidor.
+3. Subida de imágenes a Cloudinary.
+4. Almacenamiento de las referencias correspondientes en PostgreSQL.
+5. Recuperación y visualización de las imágenes en la aplicación.
+
+De esta forma, los archivos multimedia se almacenan externamente y la base de datos conserva sus referencias.
+
+---
+
+## Progressive Web App (PWA)
+
+Militech incorpora características de Progressive Web App, permitiendo instalar la aplicación desde navegadores compatibles.
+
+Entre sus características se incluyen:
+
+- Manifest de aplicación web.
+- Iconos personalizados.
+- Nombre y configuración de la aplicación.
+- Modo de visualización independiente.
+- Instalación en dispositivos compatibles.
+
+---
+
+## Estructura del proyecto
+
+```text
 militech/
+│
 ├── app/
-│   ├── page.jsx                 # Portada con botón de entrada
-│   ├── inicio/                  # Menú principal
+│   ├── page.jsx
+│   ├── inicio/
 │   ├── apartados/
 │   │   ├── departamentos/
 │   │   ├── empleados/
 │   │   └── vehiculos/
-│   ├── layout.jsx               # Layout raíz (fuentes y Toaster)
-│   └── globals.css              # Tailwind + variables de tema
+│   ├── layout.jsx
+│   └── globals.css
+│
+├── actions/
+│
 ├── components/
-│   ├── Card*.jsx                # Tarjetas de departamento, empleado y vehículo
-│   ├── Boton*.jsx               # Botones reutilizables
-│   ├── MensajeFlotante.jsx
-│   └── simpleui/                # Librería de componentes (client + server)
+│   └── simpleui/
+│
 ├── lib/
-│   └── prisma.js                # Cliente de Prisma con adaptador de PostgreSQL
+│   └── prisma.js
+│
 ├── prisma/
-│   └── schema.prisma            # Modelos y enums
-├── prisma7.config.ts            # Configuración de Prisma
-└── next.config.ts
+│   └── schema.prisma
+│
+├── public/
+│
+├── prisma7.config.ts
+├── next.config.ts
+├── package.json
+└── README.md
 ```
 
-## 🚀 Puesta en marcha
+---
+
+## Instalación y ejecución
 
 ### Requisitos previos
 
-- [Node.js](https://nodejs.org/) 20 o superior
-- Una base de datos [PostgreSQL](https://www.postgresql.org/) accesible
+- Node.js 20.9 o superior.
+- npm.
+- Una base de datos PostgreSQL.
+- Una cuenta de Neon.
+- Una cuenta de Cloudinary.
 
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/Solrak25/militech.git
+git clone https://github.com/CarlosReqBuj/militech.git
+
 cd militech
 ```
 
@@ -117,52 +224,105 @@ npm install
 
 ### 3. Configurar las variables de entorno
 
-Crea un archivo `.env` en la raíz del proyecto:
+Crear un archivo `.env` en la raíz del proyecto:
 
 ```env
-DATABASE_URL="postgresql://usuario:contraseña@localhost:5432/militech"
+DATABASE_URL="postgresql://usuario:contraseña@host/base_de_datos?sslmode=require"
+
+CLOUDINARY_CLOUD_NAME="tu_cloud_name"
+CLOUDINARY_API_KEY="tu_api_key"
+CLOUDINARY_API_SECRET="tu_api_secret"
 ```
 
-### 4. Preparar la base de datos
+Sustituir los valores por las credenciales correspondientes.
+
+No se deben subir las credenciales al repositorio.
+
+### 4. Generar el cliente de Prisma
 
 ```bash
-# Genera el cliente de Prisma
 npm run prisma
+```
 
-# Crea las tablas a partir del esquema
+### 5. Sincronizar el esquema de la base de datos
+
+```bash
 npx prisma db push --config prisma7.config.ts
 ```
 
-### 5. Arrancar en desarrollo
+### 6. Ejecutar la aplicación
 
 ```bash
 npm run dev
 ```
 
-Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
+La aplicación estará disponible en:
 
-## 📜 Scripts disponibles
-
-| Comando | Descripción |
-| --- | --- |
-| `npm run dev` | Inicia el servidor de desarrollo |
-| `npm run build` | Genera el cliente de Prisma y compila para producción |
-| `npm run start` | Sirve la versión de producción |
-| `npm run lint` | Ejecuta ESLint |
-| `npm run prisma` | Genera el cliente de Prisma |
-
-## ☁️ Despliegue
-
-El proyecto está pensado para desplegarse fácilmente en [Vercel](https://vercel.com/). Recuerda definir la variable `DATABASE_URL` en la configuración del proyecto; el script `build` ya se encarga de ejecutar `prisma generate`.
-
-## 👤 Autor
-
-Hecho por [**Solrak25**](https://github.com/Solrak25).
+http://localhost:3000
 
 ---
 
-<div align="center">
+## Scripts disponibles
 
-⚡ *Militech Corporation* ⚡
+| Comando          | Descripción                           |
+| ---------------- | ------------------------------------- |
+| `npm run dev`    | Inicia el servidor de desarrollo      |
+| `npm run build`  | Genera Prisma y compila la aplicación |
+| `npm run start`  | Inicia la aplicación en producción    |
+| `npm run lint`   | Ejecuta ESLint                        |
+| `npm run prisma` | Genera el cliente de Prisma           |
 
-</div>
+---
+
+## Despliegue
+
+La aplicación está desplegada en Vercel y utiliza servicios externos para la gestión de datos e imágenes.
+
+| Servicio   | Uso                         |
+| ---------- | --------------------------- |
+| Vercel     | Despliegue de la aplicación |
+| Neon       | Base de datos PostgreSQL    |
+| Cloudinary | Almacenamiento de imágenes  |
+
+Para desplegar la aplicación es necesario configurar las variables de entorno correspondientes en la plataforma de alojamiento.
+
+---
+
+## Requisitos del proyecto DWES
+
+| Requisito                | Implementación                                           |
+| ------------------------ | -------------------------------------------------------- |
+| Contenido estático       | Interfaz, imágenes, iconos y componentes                 |
+| Contenido dinámico       | Información almacenada en PostgreSQL e imágenes externas |
+| Base de datos relacional | PostgreSQL mediante Neon                                 |
+| Consultas mediante ORM   | Prisma                                                   |
+| Relaciones 1:N y N:M     | Relaciones entre las entidades del sistema               |
+| Operaciones CRUD         | Gestión de las entidades principales                     |
+| Gestión de imágenes      | Cloudinary mediante Server Actions                       |
+| PWA                      | Aplicación instalable con iconos personalizados          |
+| Originalidad             | Temática y funcionalidades propias                       |
+| Personalización visual   | Interfaz y componentes personalizados                    |
+
+---
+
+## Objetivos académicos
+
+El desarrollo de Militech permite aplicar los conocimientos relacionados con:
+
+- Desarrollo de aplicaciones web con Next.js.
+- Diseño y modelado de bases de datos relacionales.
+- Consultas mediante ORM.
+- Implementación de operaciones CRUD.
+- Gestión de relaciones entre entidades.
+- Integración de servicios externos.
+- Almacenamiento de imágenes en la nube.
+- Desarrollo de aplicaciones web progresivas.
+- Diseño de interfaces y componentes reutilizables.
+
+---
+
+## Autor
+
+**CarlosReqBuj**
+
+Proyecto desarrollado como parte del módulo de Desarrollo Web en Entorno Servidor (DWES).

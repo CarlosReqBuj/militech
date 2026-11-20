@@ -10,8 +10,6 @@ export default async function ListaProyectos() {
         },
     });
 
-    // Se convierten Decimal y fechas a tipos simples para poder
-    // pasarlos a un componente de cliente
     const data = proyectos.map((p) => ({
         id: p.id,
         codigo: p.codigo,

@@ -21,10 +21,8 @@ export function ListRojo({
 
     const [busqueda, setBusqueda] = useState("");
 
-    // Protección si la data aún no llega
     const originalData = data ?? [];
 
-    // Ordenamiento seguro (React Compiler se encarga de memorizarlo)
     const orderedData = [...originalData].sort((a, b) => {
         const valorA = a[orden.columna] ?? "";
         const valorB = b[orden.columna] ?? "";
@@ -59,7 +57,6 @@ export function ListRojo({
             <div>
                 <div className="w-full text-red-500">{children}</div>
 
-                {/* Buscador y Ordenación */}
                 <div className="@container">
                     <div className="my-4 flex w-full flex-col-reverse items-stretch gap-3 rounded-xl border-2 border-red-600 bg-zinc-900 p-3 sm:px-4 @3xl:flex-row @3xl:items-center @3xl:justify-between">
                         <div className="flex w-full flex-wrap gap-1 rounded-lg border border-red-600/30 bg-zinc-950 p-1 sm:gap-2 @3xl:w-fit">

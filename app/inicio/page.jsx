@@ -1,5 +1,6 @@
 import Anterior from "@/components/BotonFlechaAnterior";
 import BotonGenerico from "@/components/BotonGenerico";
+import Link from "next/link";
 
 export default function Inicio() {
     return (
@@ -33,7 +34,10 @@ export default function Inicio() {
                     text-yellow-300 
                     text-center"
                 >
-                    Bienvenido a Militech
+                    Bienvenido a{" "}
+                    <Link href="/proyectos" className="cursor-default">
+                        Militech
+                    </Link>
                 </h1>
                 <div
                     className="

@@ -66,7 +66,6 @@ Permite gestionar de forma centralizada los departamentos, empleados, cargos, ve
 | Cloudinary     | Almacenamiento de imágenes              |
 | Server Actions | Ejecución de operaciones en el servidor |
 | Sonner         | Sistema de notificaciones               |
-| next-themes    | Gestión de temas                        |
 | ESLint         | Análisis del código                     |
 
 ---
@@ -285,39 +284,6 @@ La aplicación está desplegada en Vercel y utiliza servicios externos para la g
 | Cloudinary | Almacenamiento de imágenes  |
 
 Para desplegar la aplicación es necesario configurar las variables de entorno correspondientes en la plataforma de alojamiento.
-
----
-
-## Requisitos del proyecto DWES
-
-| Requisito                | Implementación                                           |
-| ------------------------ | -------------------------------------------------------- |
-| Contenido estático       | Interfaz, imágenes, iconos y componentes                 |
-| Contenido dinámico       | Información almacenada en PostgreSQL e imágenes externas |
-| Base de datos relacional | PostgreSQL mediante Neon                                 |
-| Consultas mediante ORM   | Prisma                                                   |
-| Relaciones 1:N y N:M     | Relaciones entre las entidades del sistema               |
-| Operaciones CRUD         | Gestión de las entidades principales                     |
-| Gestión de imágenes      | Cloudinary mediante Server Actions                       |
-| PWA                      | Aplicación instalable con iconos personalizados          |
-| Originalidad             | Temática y funcionalidades propias                       |
-| Personalización visual   | Interfaz y componentes personalizados                    |
-
----
-
-## Objetivos académicos
-
-El desarrollo de Militech permite aplicar los conocimientos relacionados con:
-
-- Desarrollo de aplicaciones web con Next.js.
-- Diseño y modelado de bases de datos relacionales.
-- Consultas mediante ORM.
-- Implementación de operaciones CRUD.
-- Gestión de relaciones entre entidades.
-- Integración de servicios externos.
-- Almacenamiento de imágenes en la nube.
-- Desarrollo de aplicaciones web progresivas.
-- Diseño de interfaces y componentes reutilizables.
 
 ---
 

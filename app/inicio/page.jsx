@@ -3,6 +3,9 @@ import BotonGenerico from "@/components/BotonGenerico";
 import Link from "next/link";
 
 export default function Inicio() {
+    const alto = "50px";
+    const ancho = "400px";
+
     return (
         <div className="p-3 sm:p-5 min-h-dvh flex">
             <div
@@ -54,13 +57,25 @@ export default function Inicio() {
                     md:justify-around 
                     gap-6"
                 >
-                    <BotonGenerico href="/apartados/departamentos">
+                    <BotonGenerico
+                        href="/apartados/departamentos"
+                        alto={alto}
+                        ancho={ancho}
+                    >
                         Acceder a Departamentos
                     </BotonGenerico>
-                    <BotonGenerico href="/apartados/empleados">
+                    <BotonGenerico
+                        href="/apartados/empleados"
+                        alto={alto}
+                        ancho={ancho}
+                    >
                         Acceder a Empleados
                     </BotonGenerico>
-                    <BotonGenerico href="/apartados/vehiculos">
+                    <BotonGenerico
+                        href="/apartados/vehiculos"
+                        alto={alto}
+                        ancho={ancho}
+                    >
                         Acceder a Vehículos
                     </BotonGenerico>
                 </div>

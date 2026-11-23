@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import cloudinary from "@/lib/cloudinary";
 import path from "node:path";
+import { requireAdmin } from "@/lib/auth/permissions";
 
 async function imageUpload(file) {
     try {
@@ -57,6 +58,7 @@ function validarImagen(file) {
 }
 
 export async function crearVehiculo(prevState, formData) {
+    await requireAdmin();
     try {
         const matricula = formData.get("matricula")?.trim().toUpperCase();
 
@@ -156,6 +158,7 @@ export async function crearVehiculo(prevState, formData) {
 }
 
 export async function eliminarVehiculo(id) {
+    await requireAdmin();
     try {
         id = Number(id);
 
@@ -209,6 +212,7 @@ export async function eliminarVehiculo(id) {
 }
 
 export async function actualizarVehiculo(id, formData) {
+    await requireAdmin();
     try {
         id = Number(id);
 

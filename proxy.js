@@ -1,19 +1,33 @@
 import { NextResponse } from "next/server";
+import { verifyToken } from "@/lib/auth/jwt";
 
 export function proxy(request) {
-    const { pathname } = request.nextUrl;
+    const { pathname, search } = request.nextUrl;
 
-    // Rutas públicas
-    const publicRoutes = ["/", "/login"];
+    const token = request.cookies.get("militech_session")?.value;
+    const session = token ? verifyToken(token) : null;
 
-    const isPublic = publicRoutes.includes(pathname);
+    const isLogin = pathname === "/login";
+    const isPublic = pathname === "/";
 
-    // Comprobar token
-    const token = request.cookies.get("token")?.value;
+    // Si ya está autenticado e intenta entrar al login,
+    // lo mandamos a inicio.
+    if (session && isLogin) {
+        return NextResponse.redirect(new URL("/inicio", request.url));
+    }
 
-    // Si no hay token y no está en login
-    if (!token && !isPublic) {
-        return NextResponse.redirect(new URL("/login", request.url));
+    // Las rutas públicas no necesitan autenticación.
+    if (isPublic || isLogin) {
+        return NextResponse.next();
+    }
+
+    // Si no tiene una sesión válida, mandarlo al login
+    // conservando la ruta que quería visitar.
+    if (!session) {
+        const loginUrl = new URL("/login", request.url);
+        loginUrl.searchParams.set("callbackUrl", pathname + search);
+
+        return NextResponse.redirect(loginUrl);
     }
 
     return NextResponse.next();

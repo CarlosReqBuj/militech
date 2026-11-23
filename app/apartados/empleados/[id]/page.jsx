@@ -5,6 +5,7 @@ import ListaVehiculos from "@/components/vehiculos/ListaVehiculos";
 import { CardDepartamento } from "@/components/departamentos/CardDepartamento";
 import BotonEliminarEmpleado from "@/components/empleados/BotonEliminarEmpleado";
 import BotonModificarEmpleado from "@/components/empleados/BotonModificarEmpleado";
+import { getCurrentUser } from "@/lib/auth/permissions";
 
 export default function Page({ params }) {
     return (
@@ -60,6 +61,8 @@ export default function Page({ params }) {
 }
 
 async function InfoEmpleado({ params }) {
+    const usuario = await getCurrentUser();
+    const esAdmin = usuario?.role === "ADMIN";
     const { id } = await params;
     const empleadoId = Number(id);
 
@@ -112,32 +115,39 @@ async function InfoEmpleado({ params }) {
     mb-2
 "
             >
-                <div className="w-full sm:w-auto sm:min-w-160px">
-                    <BotonEliminarEmpleado
-                        id={empleadoId}
-                        nombre={`${nombre} ${apellidos}`}
-                    />
-                </div>
+                {" "}
+                {esAdmin && (
+                    <>
+                        <div className="w-full sm:w-auto sm:min-w-[160px]">
+                            <BotonEliminarEmpleado
+                                id={empleadoId}
+                                nombre={`${nombre} ${apellidos}`}
+                            />
+                        </div>
 
-                <div className="w-full sm:w-auto sm:min-w-160px">
-                    <BotonModificarEmpleado
-                        empleado={{
-                            id: empleado.id,
-                            nombre,
-                            apellidos,
-                            alias,
-                            email,
-                            salario: salario.toString(),
-                            activo,
-                            departamentoId: empleado.departamentoId,
-                            cargoId: empleado.cargoId,
-                            vehiculosIds: empleado.vehiculos.map((v) => v.id),
-                        }}
-                        departamentos={departamentos}
-                        cargos={cargos}
-                        vehiculos={vehiculos}
-                    />
-                </div>
+                        <div className="w-full sm:w-auto sm:min-w-[160px]">
+                            <BotonModificarEmpleado
+                                empleado={{
+                                    id: empleado.id,
+                                    nombre,
+                                    apellidos,
+                                    alias,
+                                    email,
+                                    salario: salario.toString(),
+                                    activo,
+                                    departamentoId: empleado.departamentoId,
+                                    cargoId: empleado.cargoId,
+                                    vehiculosIds: empleado.vehiculos.map(
+                                        (v) => v.id,
+                                    ),
+                                }}
+                                departamentos={departamentos}
+                                cargos={cargos}
+                                vehiculos={vehiculos}
+                            />
+                        </div>
+                    </>
+                )}
             </div>
             <div>
                 <section className="self-start min-w-0 rounded-xl border-4 border-yellow-300 p-3 sm:p-4">

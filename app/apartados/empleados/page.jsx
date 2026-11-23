@@ -3,25 +3,22 @@ import { prisma } from "@/lib/prisma";
 import Anterior from "@/components/BotonFlechaAnterior";
 import ListaEmpleados from "@/components/empleados/ListaEmpleados";
 import BotonAñadirEmpleado from "@/components/empleados/BotonAñadirEmpleado";
+import { getCurrentUser } from "@/lib/auth/permissions";
 
-export default function Empleados() {
+export default async function Empleados() {
+    const usuario = await getCurrentUser();
+    const esAdmin = usuario?.role === "ADMIN";
+
     return (
         <main className="min-h-dvh bg-transparent p-3 sm:p-5">
             <div
                 className="
-                relative 
-                flex 
-                min-h-[calc(100dvh-1.5rem)] 
-                sm:min-h-[calc(100dvh-2.5rem)] 
-                flex-col 
-                items-center 
-                gap-6 
-                sm:gap-10 
-                rounded-xl 
-                border-4 
-                border-yellow-300 
-                p-4 
-                sm:p-8"
+                    relative flex min-h-[calc(100dvh-1.5rem)]
+                    sm:min-h-[calc(100dvh-2.5rem)]
+                    flex-col items-center gap-6 sm:gap-10
+                    rounded-xl border-4 border-yellow-300
+                    p-4 sm:p-8
+                "
             >
                 <div className="absolute left-4 top-4 sm:left-6 sm:top-6">
                     <Anterior />
@@ -29,23 +26,20 @@ export default function Empleados() {
 
                 <h1
                     className="
-                    mt-14 
-                    sm:mt-12 
-                    text-3xl 
-                    sm:text-4xl 
-                    lg:text-5xl 
-                    font-bold 
-                    text-yellow-300 
-                    text-center"
+                    mt-14 sm:mt-12 text-3xl sm:text-4xl lg:text-5xl
+                    font-bold text-yellow-300 text-center
+                "
                 >
                     Empleados
                 </h1>
 
-                <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
-                    <Suspense fallback={null}>
-                        <AñadirEmpleado />
-                    </Suspense>
-                </div>
+                {esAdmin && (
+                    <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
+                        <Suspense fallback={null}>
+                            <AñadirEmpleado />
+                        </Suspense>
+                    </div>
+                )}
 
                 <div className="w-full max-w-6xl">
                     <Suspense
@@ -65,9 +59,22 @@ export default function Empleados() {
 
 async function AñadirEmpleado() {
     const [departamentos, cargos, vehiculos] = await Promise.all([
-        prisma.departamento.findMany({ orderBy: { nombre: "asc" } }),
-        prisma.cargo.findMany({ orderBy: { nivel: "asc" } }),
-        prisma.vehiculo.findMany({ orderBy: { matricula: "asc" } }),
+        prisma.departamento.findMany({
+            orderBy: { nombre: "asc" },
+        }),
+        prisma.cargo.findMany({
+            orderBy: { nivel: "asc" },
+        }),
+        prisma.vehiculo.findMany({
+            orderBy: { matricula: "asc" },
+            select: {
+                id: true,
+                matricula: true,
+                marca: true,
+                modelo: true,
+                departamentoId: true,
+            },
+        }),
     ]);
 
     return (

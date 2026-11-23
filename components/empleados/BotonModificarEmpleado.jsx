@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import BotonGenerico from "@/components/BotonGenerico";
@@ -29,6 +29,14 @@ export default function BotonModificarEmpleado({
 }) {
     const dialogRef = useRef(null);
     const formRef = useRef(null);
+
+    const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState(
+        String(empleado.departamentoId),
+    );
+
+    const vehiculosFiltrados = vehiculos.filter(
+        (v) => Number(v.departamentoId) === Number(departamentoSeleccionado),
+    );
 
     async function enviar(formData) {
         const res = await actualizarEmpleado(empleado.id, formData);
@@ -127,9 +135,12 @@ export default function BotonModificarEmpleado({
                                 <select
                                     name="departamentoId"
                                     required
-                                    defaultValue={String(
-                                        empleado.departamentoId,
-                                    )}
+                                    value={departamentoSeleccionado}
+                                    onChange={(e) =>
+                                        setDepartamentoSeleccionado(
+                                            e.target.value,
+                                        )
+                                    }
                                     className={inputClase}
                                 >
                                     {departamentos.map((d) => (
@@ -210,7 +221,7 @@ export default function BotonModificarEmpleado({
 
                                 {vehiculos.length > 0 ? (
                                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                                        {vehiculos.map((v) => (
+                                        {vehiculosFiltrados.map((v) => (
                                             <label
                                                 key={v.id}
                                                 className="flex cursor-pointer items-center gap-3 rounded-lg border border-yellow-300/30 p-3 text-gray-200 hover:bg-yellow-300/10"

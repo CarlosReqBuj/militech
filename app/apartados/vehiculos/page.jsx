@@ -3,6 +3,7 @@ import Anterior from "@/components/BotonFlechaAnterior";
 import ListaVehiculos from "@/components/vehiculos/ListaVehiculos";
 import BotonAñadirVehiculo from "@/components/vehiculos/BotonAñadirVehiculo";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth/permissions";
 
 async function FormularioAñadir() {
     const departamentos = await prisma.departamento.findMany();
@@ -10,7 +11,10 @@ async function FormularioAñadir() {
     return <BotonAñadirVehiculo departamentos={departamentos} />;
 }
 
-export default function Vehiculos() {
+export default async function Vehiculos() {
+    const usuario = await getCurrentUser();
+    const esAdmin = usuario?.role === "ADMIN";
+
     return (
         <main className="min-h-dvh bg-transparent p-3 sm:p-5">
             <div
@@ -35,17 +39,19 @@ export default function Vehiculos() {
                     Vehículos
                 </h1>
 
-                <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
-                    <Suspense
-                        fallback={
-                            <p className="text-yellow-300 text-sm">
-                                Cargando...
-                            </p>
-                        }
-                    >
-                        <FormularioAñadir />
-                    </Suspense>
-                </div>
+                {esAdmin && (
+                    <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
+                        <Suspense
+                            fallback={
+                                <p className="text-yellow-300 text-sm">
+                                    Cargando...
+                                </p>
+                            }
+                        >
+                            <FormularioAñadir />
+                        </Suspense>
+                    </div>
+                )}
 
                 <div className="w-full max-w-6xl">
                     <Suspense

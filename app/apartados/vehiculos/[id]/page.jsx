@@ -1,30 +1,35 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
 import { prisma } from "@/lib/prisma";
-import ListaEmpleados from "@/components/empleados/ListaEmpleados";
 import { CardDepartamento } from "@/components/departamentos/CardDepartamento";
 import { Modal } from "@/components/simpleui";
 import BotonEliminarVehiculo from "@/components/vehiculos/BotonEliminarVehiculo";
 import BotonModificarVehiculo from "@/components/vehiculos/BotonModificarVehiculo";
+import ListaEmpleados from "@/components/empleados/ListaEmpleados";
+import { getCurrentUser } from "@/lib/auth/permissions";
 
-export default function Page({ params }) {
+export default async function Page({ params }) {
+    const usuario = await getCurrentUser();
+    const esAdmin = usuario?.role === "ADMIN";
+
     return (
         <main className="min-h-dvh bg-transparent p-3 sm:p-5">
             <div
                 className="
-                relative 
-                flex 
-                min-h-[calc(100dvh-1.5rem)] 
-                sm:min-h-[calc(100dvh-2.5rem)] 
-                flex-col 
-                items-center 
-                gap-6 
-                sm:gap-10 
-                rounded-xl 
-                border-4 
-                border-yellow-300 
-                p-4 
-                sm:p-8"
+                    relative
+                    flex
+                    min-h-[calc(100dvh-1.5rem)]
+                    sm:min-h-[calc(100dvh-2.5rem)]
+                    flex-col
+                    items-center
+                    gap-6
+                    sm:gap-10
+                    rounded-xl
+                    border-4
+                    border-yellow-300
+                    p-4
+                    sm:p-8
+                "
             >
                 <div className="absolute left-4 top-4 sm:left-6 sm:top-6">
                     <Anterior />
@@ -32,14 +37,15 @@ export default function Page({ params }) {
 
                 <h1
                     className="
-                    mt-14 
-                    sm:mt-12 
-                    text-3xl 
-                    sm:text-4xl 
-                    lg:text-5xl 
-                    font-bold 
-                    text-yellow-300 
-                    text-center"
+                        mt-14
+                        sm:mt-12
+                        text-3xl
+                        sm:text-4xl
+                        lg:text-5xl
+                        font-bold
+                        text-yellow-300
+                        text-center
+                    "
                 >
                     Vehículo
                 </h1>
@@ -52,7 +58,7 @@ export default function Page({ params }) {
                             </p>
                         }
                     >
-                        <InfoVehiculo params={params} />
+                        <InfoVehiculo params={params} esAdmin={esAdmin} />
                     </Suspense>
                 </div>
             </div>
@@ -60,16 +66,28 @@ export default function Page({ params }) {
     );
 }
 
-async function InfoVehiculo({ params }) {
+async function InfoVehiculo({ params, esAdmin }) {
     const { id } = await params;
     const vehiculoId = Number(id);
+
+    if (!Number.isSafeInteger(vehiculoId) || vehiculoId <= 0) {
+        return (
+            <p className="text-center text-yellow-300">
+                Vehículo no encontrado
+            </p>
+        );
+    }
 
     const [vehiculo, departamentos] = await Promise.all([
         prisma.vehiculo.findUnique({
             where: { id: vehiculoId },
-            include: { departamento: true },
+            include: {
+                departamento: true,
+            },
         }),
-        prisma.departamento.findMany({ orderBy: { nombre: "asc" } }),
+        prisma.departamento.findMany({
+            orderBy: { nombre: "asc" },
+        }),
     ]);
 
     if (!vehiculo) {
@@ -85,57 +103,80 @@ async function InfoVehiculo({ params }) {
 
     return (
         <div className="flex w-full flex-col gap-6 sm:gap-8">
-            <div
-                className="
-                mb-2
-                flex
-                w-full
-                flex-col-reverse
-                gap-3
-                sm:flex-row
-                sm:items-center
-                sm:justify-end
-                sm:gap-4"
-            >
-                <div className="w-full sm:w-auto sm:min-w-160px">
-                    <BotonEliminarVehiculo
-                        id={vehiculoId}
-                        matricula={matricula}
-                    />
-                </div>
+            {/* Botones exclusivos para administradores */}
+            {esAdmin && (
+                <div
+                    className="
+                        mb-2
+                        flex
+                        w-full
+                        flex-col-reverse
+                        gap-3
+                        sm:flex-row
+                        sm:items-center
+                        sm:justify-end
+                        sm:gap-4
+                    "
+                >
+                    <div className="w-full sm:w-auto sm:min-w-[160px]">
+                        <BotonEliminarVehiculo
+                            id={vehiculoId}
+                            matricula={matricula}
+                        />
+                    </div>
 
-                <div className="w-full sm:w-auto sm:min-w-160px">
-                    <BotonModificarVehiculo
-                        vehiculo={{
-                            id: vehiculo.id,
-                            matricula,
-                            marca,
-                            modelo,
-                            tipo,
-                            operativo,
-                            foto,
-                            departamentoId: vehiculo.departamentoId,
-                        }}
-                        departamentos={departamentos}
-                    />
+                    <div className="w-full sm:w-auto sm:min-w-[160px]">
+                        <BotonModificarVehiculo
+                            vehiculo={{
+                                id: vehiculo.id,
+                                matricula,
+                                marca,
+                                modelo,
+                                tipo,
+                                operativo,
+                                foto,
+                                departamentoId: vehiculo.departamentoId,
+                            }}
+                            departamentos={departamentos}
+                        />
+                    </div>
                 </div>
-            </div>
+            )}
 
+            {/* Información del vehículo */}
             <div>
-                <section className="flex w-full min-w-0 items-center gap-2 self-start rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                <section
+                    className="
+                    flex
+                    w-full
+                    min-w-0
+                    items-center
+                    gap-2
+                    self-start
+                    rounded-xl
+                    border-4
+                    border-yellow-300
+                    p-3
+                    sm:p-4
+                "
+                >
                     <div className="min-w-0">
                         <h2 className="text-xl font-bold text-yellow-300 sm:text-3xl">
                             {matricula}
                         </h2>
+
                         <p className="mt-2 text-sm text-gray-300 sm:text-base">
                             Marca: {marca}
                         </p>
+
                         <p className="mt-2 text-sm text-gray-300 sm:text-base">
                             Modelo: {modelo}
                         </p>
+
                         <p className="mt-2 text-sm text-gray-300 sm:text-base">
                             Tipo: {tipo}
                         </p>
+
                         <p className="mt-2 text-sm text-gray-300 sm:text-base">
                             Estado: {operativo ? "operativo" : "no disponible"}
                         </p>
@@ -147,7 +188,16 @@ async function InfoVehiculo({ params }) {
                                 <img
                                     src={foto}
                                     alt="Foto del vehículo"
-                                    className="h-24 w-24 shrink-0 cursor-zoom-in rounded-lg object-contain sm:h-40 sm:w-40"
+                                    className="
+                                        h-24
+                                        w-24
+                                        shrink-0
+                                        cursor-zoom-in
+                                        rounded-lg
+                                        object-contain
+                                        sm:h-40
+                                        sm:w-40
+                                    "
                                 />
                             }
                         >
@@ -161,15 +211,38 @@ async function InfoVehiculo({ params }) {
                 </section>
             </div>
 
+            {/* Departamento del vehículo */}
             <div className="grid grid-cols-1 gap-6 lg:gap-8">
-                <section className="min-w-0 self-start rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                <section
+                    className="
+                    min-w-0
+                    self-start
+                    rounded-xl
+                    border-4
+                    border-yellow-300
+                    p-3
+                    sm:p-4
+                "
+                >
                     <div className="mb-4 text-xl font-bold text-yellow-300">
                         Departamento
                     </div>
+
                     <CardDepartamento data={departamento} />
                 </section>
 
-                <section className="min-w-0 overflow-x-auto rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                {/* Empleados asignados al vehículo */}
+                <section
+                    className="
+                    min-w-0
+                    overflow-x-auto
+                    rounded-xl
+                    border-4
+                    border-yellow-300
+                    p-3
+                    sm:p-4
+                "
+                >
                     <Suspense
                         fallback={
                             <p className="text-center text-yellow-300">

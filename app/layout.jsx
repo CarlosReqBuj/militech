@@ -32,7 +32,7 @@ export const metadata = {
 };
 
 const estiloToast =
-    "fixed top-4 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2 whitespace-nowrap px-4 py-2 text-sm bg-yellow-300 rounded-lg text-black shadow-md shadow-yellow-300/50";
+    "fixed top-4 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2 whitespace-nowrap px-4 py-2 text-sm rounded-lg shadow-md";
 
 export const viewport = {
     themeColor: "#09090b",
@@ -56,6 +56,9 @@ export default function RootLayout({ children }) {
                         unstyled: true,
                         classNames: {
                             toast: estiloToast,
+                            success: "bg-yellow-300 text-black shadow-yellow-300/50",
+                            error: "bg-red-500 text-white shadow-red-500/50",
+                            default: "bg-yellow-300 text-black shadow-yellow-300/50",
                         },
                     }}
                 />

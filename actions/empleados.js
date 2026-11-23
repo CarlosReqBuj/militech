@@ -6,14 +6,21 @@ import { prisma } from "@/lib/prisma";
 export async function crearEmpleado(formData) {
     try {
         const vehiculosIds = formData.getAll("vehiculos").map(Number);
+        const departamentoId = Number(formData.get("departamentoId"));
 
-        const idsValidos = vehiculos
-            .filter(
-                (v) =>
-                    v.departamentoId === departamentoId &&
-                    vehiculosIds.includes(v.id),
-            )
-            .map((v) => ({ id: v.id }));
+        const vehiculos = await prisma.vehiculo.findMany({
+            where: {
+                id: { in: vehiculosIds },
+                departamentoId,
+            },
+            select: { id: true },
+        });
+
+        if (vehiculos.length !== new Set(vehiculosIds).size) {
+            return {
+                error: "Hay vehículos que no pertenecen a este departamento",
+            };
+        }
 
         await prisma.empleado.create({
             data: {
@@ -21,13 +28,13 @@ export async function crearEmpleado(formData) {
                 apellidos: formData.get("apellidos"),
                 alias: formData.get("alias") || null,
                 email: formData.get("email"),
-                salario: formData.get("salario"),
+                salario: Number(formData.get("salario")),
                 activo: formData.get("activo") === "true",
-                departamentoId: Number(formData.get("departamentoId")),
+                departamentoId,
                 cargoId: Number(formData.get("cargoId")),
 
                 vehiculos: {
-                    connect: vehiculosIds,
+                    connect: vehiculos.map((v) => ({ id: v.id })),
                 },
             },
         });
@@ -36,7 +43,12 @@ export async function crearEmpleado(formData) {
         return { ok: true };
     } catch (e) {
         console.error("Error al crear empleado:", e);
-        return { error: `${e.code ?? "ERROR"}: ${e.message}` };
+
+        if (e.code === "P2002") {
+            return { error: "Ya existe un empleado con ese email" };
+        }
+
+        return { error: "No se pudo crear el empleado" };
     }
 }
 
@@ -54,6 +66,7 @@ export async function eliminarEmpleado(id) {
         if (e.code === "P2025") {
             return { error: "El empleado ya no existe" };
         }
+
         return { error: "No se pudo eliminar el empleado" };
     }
 }
@@ -61,14 +74,22 @@ export async function eliminarEmpleado(id) {
 export async function actualizarEmpleado(id, formData) {
     try {
         const vehiculosIds = formData.getAll("vehiculos").map(Number);
+        const departamentoId = Number(formData.get("departamentoId"));
 
-        const idsValidos = vehiculos
-            .filter(
-                (v) =>
-                    v.departamentoId === departamentoId &&
-                    vehiculosIds.includes(v.id),
-            )
-            .map((v) => ({ id: v.id }));
+        // Filtrar vehículos del mismo departamento
+        const vehiculos = await prisma.vehiculo.findMany({
+            where: {
+                id: { in: vehiculosIds },
+                departamentoId,
+            },
+            select: { id: true },
+        });
+
+        if (vehiculos.length !== new Set(vehiculosIds).size) {
+            return {
+                error: "Hay vehículos que no pertenecen a este departamento",
+            };
+        }
 
         await prisma.empleado.update({
             where: { id: Number(id) },
@@ -79,11 +100,11 @@ export async function actualizarEmpleado(id, formData) {
                 email: formData.get("email"),
                 salario: Number(formData.get("salario")),
                 activo: formData.get("activo") === "true",
-                departamentoId: Number(formData.get("departamentoId")),
+                departamentoId,
                 cargoId: Number(formData.get("cargoId")),
 
                 vehiculos: {
-                    set: vehiculosIds,
+                    set: vehiculos.map((v) => ({ id: v.id })),
                 },
             },
         });
@@ -100,7 +121,9 @@ export async function actualizarEmpleado(id, formData) {
         }
 
         if (e.code === "P2025") {
-            return { error: "El empleado ya no existe" };
+            return {
+                error: "El empleado o alguno de los registros relacionados no existe",
+            };
         }
 
         return { error: "No se pudo modificar el empleado" };

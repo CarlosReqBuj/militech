@@ -9,7 +9,7 @@ import { InputImage } from "@/components/simpleui";
 import { crearVehiculo } from "@/actions/vehiculos";
 
 const inputClase =
-    "w-full rounded-lg border-2 border-yellow-300/60 bg-transparent px-3 py-2 text-sm sm:text-base text-gray-200 placeholder:text-gray-500 focus:border-yellow-300 focus:outline-none";
+    "w-full rounded-lg border-2 border-yellow-300/60 bg-neutral-950 px-3 py-2 text-sm sm:text-base text-gray-200 placeholder:text-gray-500 focus:border-yellow-300 focus:outline-none";
 
 const labelClase = "flex flex-col gap-1 text-sm sm:text-base text-gray-300";
 
@@ -56,7 +56,7 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
 
             <dialog
                 ref={dialogRef}
-                className="m-auto max-h-[95dvh] w-[calc(100%-1.5rem)] max-w-4xl overflow-y-auto rounded-xl border-4 border-yellow-300 bg-neutral-950 p-0 backdrop:bg-black/70"
+                className="m-auto max-h-[95dvh] w-[calc(100%-1.5rem)] max-w-4xl overflow-y-auto rounded-xl border-4 border-yellow-300 bg-neutral-950 p-0 text-gray-200 backdrop:bg-black/70"
             >
                 <div className="p-4 sm:p-6">
                     <h2 className="mb-4 text-center text-2xl font-bold text-yellow-300 sm:text-3xl">
@@ -113,12 +113,20 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
                                     defaultValue=""
                                     className={inputClase}
                                 >
-                                    <option value="" disabled>
+                                    <option
+                                        value=""
+                                        disabled
+                                        className="bg-neutral-950 text-gray-400"
+                                    >
                                         Selecciona...
                                     </option>
 
                                     {TIPOS.map((t) => (
-                                        <option key={t} value={t}>
+                                        <option
+                                            key={t}
+                                            value={t}
+                                            className="bg-neutral-950 text-gray-200"
+                                        >
                                             {t}
                                         </option>
                                     ))}
@@ -133,12 +141,20 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
                                     defaultValue=""
                                     className={inputClase}
                                 >
-                                    <option value="" disabled>
+                                    <option
+                                        value=""
+                                        disabled
+                                        className="bg-neutral-950 text-gray-400"
+                                    >
                                         Selecciona...
                                     </option>
 
                                     {departamentos.map((d) => (
-                                        <option key={d.id} value={d.id}>
+                                        <option
+                                            key={d.id}
+                                            value={d.id}
+                                            className="bg-neutral-950 text-gray-200"
+                                        >
                                             {d.nombre}
                                         </option>
                                     ))}
@@ -158,12 +174,14 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
 
                         {/* Fotografía */}
 
-                        <InputImage
-                            name="foto"
-                            label="Fotografía del vehículo"
-                            width={320}
-                            height={200}
-                        />
+                        <div className="rounded-lg border-2 border-yellow-300/30 bg-neutral-900 p-3">
+                            <InputImage
+                                name="foto"
+                                label="Fotografía del vehículo"
+                                width={320}
+                                height={200}
+                            />
+                        </div>
 
                         {/* Botones */}
 

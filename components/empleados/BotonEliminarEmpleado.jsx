@@ -13,16 +13,23 @@ export default function BotonEliminarEmpleado({ id, nombre }) {
 
     function confirmar() {
         startTransition(async () => {
-            const res = await eliminarEmpleado(id);
+            try {
+                const res = await eliminarEmpleado(id);
 
-            if (res?.error) {
-                toast.error(res.error);
-                return;
+                if (res?.error) {
+                    toast.error(res.error);
+                    dialogRef.current?.close();
+                    return;
+                }
+
+                toast.success("Empleado eliminado");
+                dialogRef.current?.close();
+                router.push("/apartados/empleados");
+            } catch (error) {
+                console.error("Error al eliminar empleado:", error);
+                toast.error("No se pudo eliminar el empleado");
+                dialogRef.current?.close();
             }
-
-            toast.success("Empleado eliminado");
-            dialogRef.current.close();
-            router.push("/apartados/empleados");
         });
     }
 

@@ -33,15 +33,22 @@ export default function BotonModificarVehiculo({
     const formRef = useRef(null);
 
     async function enviar(formData) {
-        const res = await actualizarVehiculo(vehiculo.id, formData);
+        try {
+            const res = await actualizarVehiculo(vehiculo.id, formData);
 
-        if (res?.error) {
-            toast.error(res.error);
-            return;
+            if (res?.error) {
+                toast.error(res.error);
+                dialogRef.current?.close();
+                return;
+            }
+
+            toast.success("Vehículo modificado");
+            dialogRef.current?.close();
+        } catch (error) {
+            console.error("Error al modificar vehículo:", error);
+            toast.error("No se pudo modificar el vehículo");
+            dialogRef.current?.close();
         }
-
-        toast.success("Vehículo modificado");
-        dialogRef.current?.close();
     }
 
     return (

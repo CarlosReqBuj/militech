@@ -22,6 +22,7 @@ export default function BotonEliminarVehiculo({ id, matricula }) {
 
                 if (res?.error) {
                     toast.error(res.error);
+                    dialogRef.current?.close();
                     return;
                 }
 
@@ -36,6 +37,7 @@ export default function BotonEliminarVehiculo({ id, matricula }) {
             } catch (error) {
                 console.error("Error al eliminar:", error);
                 toast.error("Ha ocurrido un error al eliminar el vehículo");
+                dialogRef.current?.close();
             }
         });
     }

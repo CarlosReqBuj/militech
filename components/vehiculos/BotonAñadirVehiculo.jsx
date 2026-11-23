@@ -37,6 +37,7 @@ export default function BotonAñadirVehiculo({ departamentos = [] }) {
 
         if (state.error) {
             toast.error(state.error);
+            dialogRef.current?.close();
             return;
         }
 

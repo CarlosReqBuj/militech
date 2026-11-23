@@ -36,15 +36,22 @@ export default function BotonAñadirEmpleado({
     );
 
     async function enviar(formData) {
-        const res = await crearEmpleado(formData);
+        try {
+            const res = await crearEmpleado(formData);
 
-        if (res?.error) {
-            toast.error(res.error);
-            return;
+            if (res?.error) {
+                toast.error(res.error);
+                dialogRef.current?.close();
+                return;
+            }
+
+            toast.success("Empleado añadido");
+            dialogRef.current?.close();
+        } catch (error) {
+            console.error("Error al añadir empleado:", error);
+            toast.error("No se pudo añadir el empleado");
+            dialogRef.current?.close();
         }
-
-        toast.success("Empleado añadido");
-        dialogRef.current?.close();
     }
 
     return (

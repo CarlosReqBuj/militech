@@ -77,15 +77,22 @@ export default function BotonModificarEmpleado({
     }, [vehiculosSeleccionados]);
 
     async function enviar(formData) {
-        const res = await actualizarEmpleado(empleado.id, formData);
+        try {
+            const res = await actualizarEmpleado(empleado.id, formData);
 
-        if (res?.error) {
-            toast.error(res.error);
-            return;
+            if (res?.error) {
+                toast.error(res.error);
+                dialogRef.current?.close();
+                return;
+            }
+
+            toast.success("Empleado modificado");
+            dialogRef.current?.close();
+        } catch (error) {
+            console.error("Error al modificar empleado:", error);
+            toast.error("No se pudo modificar el empleado");
+            dialogRef.current?.close();
         }
-
-        toast.success("Empleado modificado");
-        dialogRef.current?.close();
     }
 
     return (

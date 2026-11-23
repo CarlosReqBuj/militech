@@ -7,6 +7,14 @@ export async function crearEmpleado(formData) {
     try {
         const vehiculosIds = formData.getAll("vehiculos").map(Number);
 
+        const idsValidos = vehiculos
+            .filter(
+                (v) =>
+                    v.departamentoId === departamentoId &&
+                    vehiculosIds.includes(v.id),
+            )
+            .map((v) => ({ id: v.id }));
+
         await prisma.empleado.create({
             data: {
                 nombre: formData.get("nombre"),
@@ -19,7 +27,7 @@ export async function crearEmpleado(formData) {
                 cargoId: Number(formData.get("cargoId")),
 
                 vehiculos: {
-                    connect: vehiculosIds.map((id) => ({ id })),
+                    connect: vehiculosIds,
                 },
             },
         });
@@ -54,6 +62,14 @@ export async function actualizarEmpleado(id, formData) {
     try {
         const vehiculosIds = formData.getAll("vehiculos").map(Number);
 
+        const idsValidos = vehiculos
+            .filter(
+                (v) =>
+                    v.departamentoId === departamentoId &&
+                    vehiculosIds.includes(v.id),
+            )
+            .map((v) => ({ id: v.id }));
+
         await prisma.empleado.update({
             where: { id: Number(id) },
             data: {
@@ -67,9 +83,7 @@ export async function actualizarEmpleado(id, formData) {
                 cargoId: Number(formData.get("cargoId")),
 
                 vehiculos: {
-                    set: vehiculosIds.map((vehiculoId) => ({
-                        id: vehiculoId,
-                    })),
+                    set: vehiculosIds,
                 },
             },
         });

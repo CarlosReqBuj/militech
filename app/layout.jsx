@@ -31,14 +31,14 @@ export const metadata = {
     },
 };
 
-const estiloToast =
-    "fixed top-4 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2 whitespace-nowrap px-4 py-2 text-sm bg-yellow-300 rounded-lg text-black shadow-md shadow-yellow-300/50";
-
 export const viewport = {
     themeColor: "#09090b",
     width: "device-width",
     initialScale: 1,
 };
+
+const estiloToast =
+    "!flex !w-[calc(100vw-32px)] !max-w-[400px] !min-w-0 !items-center !justify-center !gap-2 !whitespace-normal !break-words !rounded-lg !bg-yellow-300 !px-4 !py-3 !text-center !text-sm !text-black !shadow-md !shadow-yellow-300/50";
 
 export default function RootLayout({ children }) {
     return (
@@ -48,10 +48,11 @@ export default function RootLayout({ children }) {
         >
             <body className="min-h-full flex flex-col">
                 <ServiceWorkerRegister />
+
                 {children}
+
                 <Toaster
                     position="top-center"
-                    style={{ "--width": "320px" }}
                     toastOptions={{
                         unstyled: true,
                         classNames: {

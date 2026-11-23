@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import Anterior from "@/components/BotonFlechaAnterior";
 import { prisma } from "@/lib/prisma";
 import { CardDepartamento } from "@/components/departamentos/CardDepartamento";
@@ -8,10 +9,7 @@ import BotonModificarVehiculo from "@/components/vehiculos/BotonModificarVehicul
 import ListaEmpleados from "@/components/empleados/ListaEmpleados";
 import { getCurrentUser } from "@/lib/auth/permissions";
 
-export default async function Page({ params }) {
-    const usuario = await getCurrentUser();
-    const esAdmin = usuario?.role === "ADMIN";
-
+export default function Page({ params }) {
     return (
         <main className="min-h-dvh bg-transparent p-3 sm:p-5">
             <div
@@ -58,7 +56,7 @@ export default async function Page({ params }) {
                             </p>
                         }
                     >
-                        <InfoVehiculo params={params} esAdmin={esAdmin} />
+                        <InfoVehiculo params={params} />
                     </Suspense>
                 </div>
             </div>
@@ -66,7 +64,12 @@ export default async function Page({ params }) {
     );
 }
 
-async function InfoVehiculo({ params, esAdmin }) {
+async function InfoVehiculo({ params }) {
+    await connection();
+
+    const usuario = await getCurrentUser();
+    const esAdmin = usuario?.role === "ADMIN";
+
     const { id } = await params;
     const vehiculoId = Number(id);
 
@@ -85,9 +88,12 @@ async function InfoVehiculo({ params, esAdmin }) {
                 departamento: true,
             },
         }),
-        prisma.departamento.findMany({
-            orderBy: { nombre: "asc" },
-        }),
+
+        esAdmin
+            ? prisma.departamento.findMany({
+                  orderBy: { nombre: "asc" },
+              })
+            : Promise.resolve([]),
     ]);
 
     if (!vehiculo) {
@@ -103,7 +109,7 @@ async function InfoVehiculo({ params, esAdmin }) {
 
     return (
         <div className="flex w-full flex-col gap-6 sm:gap-8">
-            {/* Botones exclusivos para administradores */}
+            {/* Botones exclusivos para ADMIN */}
             {esAdmin && (
                 <div
                     className="
@@ -118,14 +124,14 @@ async function InfoVehiculo({ params, esAdmin }) {
                         sm:gap-4
                     "
                 >
-                    <div className="w-full sm:w-auto sm:min-w-[160px]">
+                    <div className="w-full sm:w-auto sm:min-w[160px]">
                         <BotonEliminarVehiculo
                             id={vehiculoId}
                             matricula={matricula}
                         />
                     </div>
 
-                    <div className="w-full sm:w-auto sm:min-w-[160px]">
+                    <div className="w-full sm:w-auto sm:min-w[160px]">
                         <BotonModificarVehiculo
                             vehiculo={{
                                 id: vehiculo.id,
@@ -231,7 +237,7 @@ async function InfoVehiculo({ params, esAdmin }) {
                     <CardDepartamento data={departamento} />
                 </section>
 
-                {/* Empleados asignados al vehículo */}
+                {/* Empleados asignados */}
                 <section
                     className="
                     min-w-0

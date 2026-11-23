@@ -108,3 +108,20 @@ model Proyecto {
   @@index([departamentoId])
   @@map("proyectos")
 }
+
+enum Role {
+  ADMIN
+  EMPLEADO
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  nombre       String
+  role         Role     @default(EMPLEADO)
+  activo       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  @@map("usuarios")
+}

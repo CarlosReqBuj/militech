@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import BotonGenerico from "@/components/BotonGenerico";
@@ -30,6 +30,52 @@ export default function BotonModificarEmpleado({
     const dialogRef = useRef(null);
     const formRef = useRef(null);
 
+    const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState(
+        String(empleado.departamentoId),
+    );
+
+    // Vehículos que ya tiene asignados el empleado
+    const [vehiculosSeleccionados, setVehiculosSeleccionados] = useState(
+        (empleado.vehiculosIds ?? []).map(String),
+    );
+
+    // Filtrar vehículos por departamento
+    const vehiculosFiltrados = vehiculos.filter(
+        (v) => String(v.departamentoId) === String(departamentoSeleccionado),
+    );
+
+    // Actualizar departamento y limpiar vehículos anteriores
+    function cambiarDepartamento(e) {
+        const nuevoDepartamento = e.target.value;
+
+        setDepartamentoSeleccionado(nuevoDepartamento);
+        setVehiculosSeleccionados([]);
+    }
+
+    // Controlar selección de vehículos
+    function cambiarVehiculo(id) {
+        setVehiculosSeleccionados((actuales) =>
+            actuales.includes(String(id))
+                ? actuales.filter((v) => v !== String(id))
+                : [...actuales, String(id)],
+        );
+    }
+
+    // Sincronizar los checkboxes con el estado
+    useEffect(() => {
+        if (!formRef.current) return;
+
+        const checkboxes = formRef.current.querySelectorAll(
+            'input[name="vehiculos"]',
+        );
+
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = vehiculosSeleccionados.includes(
+                String(checkbox.value),
+            );
+        });
+    }, [vehiculosSeleccionados]);
+
     async function enviar(formData) {
         const res = await actualizarEmpleado(empleado.id, formData);
 
@@ -39,12 +85,12 @@ export default function BotonModificarEmpleado({
         }
 
         toast.success("Empleado modificado");
-        dialogRef.current.close();
+        dialogRef.current?.close();
     }
 
     return (
         <>
-            <BotonGenerico onClick={() => dialogRef.current.showModal()}>
+            <BotonGenerico onClick={() => dialogRef.current?.showModal()}>
                 Modificar empleado
             </BotonGenerico>
 
@@ -64,6 +110,7 @@ export default function BotonModificarEmpleado({
                         action={enviar}
                         className="flex flex-col gap-4"
                     >
+                        {/* Datos personales */}
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                             <label className={labelClase}>
                                 Nombre
@@ -95,6 +142,7 @@ export default function BotonModificarEmpleado({
                             </label>
                         </div>
 
+                        {/* Email y salario */}
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <label className={labelClase}>
                                 Email
@@ -121,15 +169,15 @@ export default function BotonModificarEmpleado({
                             </label>
                         </div>
 
+                        {/* Departamento, cargo y estado */}
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                             <label className={labelClase}>
                                 Departamento
                                 <select
                                     name="departamentoId"
                                     required
-                                    defaultValue={String(
-                                        empleado.departamentoId,
-                                    )}
+                                    value={departamentoSeleccionado}
+                                    onChange={cambiarDepartamento}
                                     className={inputClase}
                                 >
                                     {departamentos.map((d) => (
@@ -193,6 +241,7 @@ export default function BotonModificarEmpleado({
                             </fieldset>
                         </div>
 
+                        {/* Vehículos asignados */}
                         <details className="group rounded-lg border-2 border-yellow-300/60">
                             <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-3 text-lg font-bold text-yellow-300 hover:bg-yellow-300/10 [&::-webkit-details-marker]:hidden">
                                 <span>Vehículos asignados</span>
@@ -208,9 +257,9 @@ export default function BotonModificarEmpleado({
                                     asignados este empleado.
                                 </p>
 
-                                {vehiculos.length > 0 ? (
+                                {vehiculosFiltrados.length > 0 ? (
                                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                                        {vehiculos.map((v) => (
+                                        {vehiculosFiltrados.map((v) => (
                                             <label
                                                 key={v.id}
                                                 className="flex cursor-pointer items-center gap-3 rounded-lg border border-yellow-300/30 p-3 text-gray-200 hover:bg-yellow-300/10"
@@ -219,9 +268,12 @@ export default function BotonModificarEmpleado({
                                                     type="checkbox"
                                                     name="vehiculos"
                                                     value={v.id}
-                                                    defaultChecked={empleado.vehiculosIds?.includes(
-                                                        v.id,
+                                                    checked={vehiculosSeleccionados.includes(
+                                                        String(v.id),
                                                     )}
+                                                    onChange={() =>
+                                                        cambiarVehiculo(v.id)
+                                                    }
                                                     className="h-5 w-5 shrink-0 accent-yellow-300"
                                                 />
 
@@ -239,17 +291,20 @@ export default function BotonModificarEmpleado({
                                     </div>
                                 ) : (
                                     <p className="text-gray-400">
-                                        No hay vehículos disponibles.
+                                        {departamentoSeleccionado
+                                            ? "No hay vehículos en este departamento."
+                                            : "Selecciona un departamento."}
                                     </p>
                                 )}
                             </div>
                         </details>
 
+                        {/* Botones */}
                         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
                             <BotonGenerico
                                 variante="secundario"
                                 className="sm:w-auto"
-                                onClick={() => dialogRef.current.close()}
+                                onClick={() => dialogRef.current?.close()}
                             >
                                 Cancelar
                             </BotonGenerico>

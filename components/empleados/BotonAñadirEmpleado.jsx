@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import BotonGenerico from "@/components/BotonGenerico";
@@ -27,6 +27,13 @@ export default function BotonAñadirEmpleado({
     vehiculos = [],
 }) {
     const dialogRef = useRef(null);
+
+    const [departamentoSeleccionado, setDepartamentoSeleccionado] =
+        useState("");
+
+    const vehiculosFiltrados = vehiculos.filter(
+        (v) => String(v.departamentoId) === String(departamentoSeleccionado),
+    );
 
     async function enviar(formData) {
         const res = await crearEmpleado(formData);
@@ -121,7 +128,12 @@ export default function BotonAñadirEmpleado({
                                 <select
                                     name="departamentoId"
                                     required
-                                    defaultValue=""
+                                    value={departamentoSeleccionado}
+                                    onChange={(e) =>
+                                        setDepartamentoSeleccionado(
+                                            e.target.value,
+                                        )
+                                    }
                                     className={inputClase}
                                 >
                                     <option
@@ -202,7 +214,6 @@ export default function BotonAñadirEmpleado({
 
                         {/* Vehículos asignados */}
 
-                        {/* Vehículos asignados */}
                         <details className="group rounded-lg border-2 border-yellow-300/60">
                             <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-3 text-lg font-bold text-yellow-300 hover:bg-yellow-300/10 [&::-webkit-details-marker]:hidden">
                                 <span>Vehículos asignados</span>
@@ -218,9 +229,9 @@ export default function BotonAñadirEmpleado({
                                     asignados este empleado.
                                 </p>
 
-                                {vehiculos.length > 0 ? (
+                                {vehiculosFiltrados.length > 0 ? (
                                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                                        {vehiculos.map((v) => (
+                                        {vehiculosFiltrados.map((v) => (
                                             <label
                                                 key={v.id}
                                                 className="flex cursor-pointer items-center gap-3 rounded-lg border border-yellow-300/30 p-3 text-gray-200 hover:bg-yellow-300/10"
@@ -246,7 +257,9 @@ export default function BotonAñadirEmpleado({
                                     </div>
                                 ) : (
                                     <p className="text-gray-400">
-                                        No hay vehículos disponibles.
+                                        {departamentoSeleccionado
+                                            ? "No hay vehículos en este departamento."
+                                            : "Selecciona primero un departamento."}
                                     </p>
                                 )}
                             </div>

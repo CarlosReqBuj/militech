@@ -42,7 +42,7 @@ export default function Empleados() {
                 </h1>
 
                 <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
-                    <Suspense fallback={null}>
+                    <Suspense>
                         <AñadirEmpleado />
                     </Suspense>
                 </div>

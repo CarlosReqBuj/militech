@@ -48,13 +48,7 @@ export default function Vehiculos() {
                 </div>
 
                 <div className="w-full max-w-6xl">
-                    <Suspense
-                        fallback={
-                            <p className="text-center text-yellow-300">
-                                Cargando vehículos...
-                            </p>
-                        }
-                    >
+                    <Suspense>
                         <ListaVehiculos />
                     </Suspense>
                 </div>

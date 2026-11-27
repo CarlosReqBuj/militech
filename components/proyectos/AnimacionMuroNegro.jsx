@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { CLAVE_ANIMACION_MURO } from "@/components/proyectos/EnlaceProyectosInicio";
 
 const LINEAS = [
@@ -13,30 +14,48 @@ const LINEAS = [
 
 export default function AnimacionMuroNegro() {
     const [visible, setVisible] = useState(false);
-    const debeAnimar = useRef(null);
+    const tokenConsumido = useRef(null);
+    const pathname = usePathname();
 
     useEffect(() => {
-        if (debeAnimar.current === null) {
-            const marca = Number(
-                window.sessionStorage.getItem(CLAVE_ANIMACION_MURO),
-            );
-            window.sessionStorage.removeItem(CLAVE_ANIMACION_MURO);
-
-            debeAnimar.current =
-                Number.isFinite(marca) &&
-                marca > 0 &&
-                Date.now() - marca < 10000 &&
-                !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (pathname !== "/apartados/proyectos") {
+            tokenConsumido.current = null;
+            const frame = requestAnimationFrame(() => setVisible(false));
+            return () => cancelAnimationFrame(frame);
         }
 
-        if (!debeAnimar.current) return;
+        let token = tokenConsumido.current;
+
+        if (!token) {
+            const marca = window.sessionStorage.getItem(CLAVE_ANIMACION_MURO);
+            window.sessionStorage.removeItem(CLAVE_ANIMACION_MURO);
+
+            const instante = Number(marca?.split(":", 1)[0]);
+            const marcaValida =
+                Number.isFinite(instante) &&
+                instante > 0 &&
+                Date.now() - instante < 10000;
+            const movimientoReducido = window.matchMedia(
+                "(prefers-reduced-motion: reduce)",
+            ).matches;
+
+            if (marcaValida && !movimientoReducido) {
+                token = marca;
+                tokenConsumido.current = marca;
+            }
+        }
+
+        if (!token) {
+            const frame = requestAnimationFrame(() => setVisible(false));
+            return () => cancelAnimationFrame(frame);
+        }
 
         setVisible(true);
         const temporizador = setTimeout(() => setVisible(false), 3500);
         return () => clearTimeout(temporizador);
-    }, []);
+    }, [pathname]);
 
-    if (!visible) return null;
+    if (!visible || pathname !== "/apartados/proyectos") return null;
 
     return (
         <div className="muro" aria-hidden="true">

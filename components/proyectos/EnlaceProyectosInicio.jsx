@@ -18,7 +18,7 @@ export default function EnlaceProyectosInicio({ children, className }) {
 
         window.sessionStorage.setItem(
             CLAVE_ANIMACION_MURO,
-            String(Date.now()),
+            `${Date.now()}:${Math.random().toString(36).slice(2)}`,
         );
     }
 

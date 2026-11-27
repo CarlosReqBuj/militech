@@ -7,6 +7,7 @@ export const CLAVE_ANIMACION_MURO = "militech:activar-muro-negro";
 export default function EnlaceProyectosInicio({ children, className }) {
     function marcarEntrada(event) {
         if (
+            window.location.pathname !== "/inicio" ||
             event.button !== 0 ||
             event.metaKey ||
             event.ctrlKey ||
@@ -18,13 +19,17 @@ export default function EnlaceProyectosInicio({ children, className }) {
 
         window.sessionStorage.setItem(
             CLAVE_ANIMACION_MURO,
-            `${Date.now()}:${Math.random().toString(36).slice(2)}`,
+            JSON.stringify({
+                origen: window.location.pathname,
+                creado: Date.now(),
+                token: Math.random().toString(36).slice(2),
+            }),
         );
     }
 
     return (
         <Link
-            href="/apartados/proyectos"
+            href="/apartados/proyectos/entrada"
             onClick={marcarEntrada}
             className={className}
         >

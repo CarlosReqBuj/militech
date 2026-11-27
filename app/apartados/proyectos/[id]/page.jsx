@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import AnteriorRojo from "@/components/BotonFlechaAnteriorRojo";
+import DetalleDato from "@/components/DetalleDato";
 import { CardDepartamento } from "@/components/departamentos/CardDepartamento";
 import ListaEmpleados from "@/components/empleados/ListaEmpleados";
 import { prisma } from "@/lib/prisma";
@@ -88,6 +89,13 @@ async function InfoProyectos({ params }) {
         style: "currency",
         currency: "EUR",
     }).format(Number(presupuesto));
+    const estadoProyecto = {
+        EN_CURSO: "correcto",
+        COMPLETADO: "correcto",
+        PAUSADO: "alerta",
+        CANCELADO: "error",
+        PLANIFICADO: "alerta",
+    }[estado];
 
     return (
         <div className="flex w-full flex-col gap-6 sm:gap-8">
@@ -96,27 +104,33 @@ async function InfoProyectos({ params }) {
                     <h2 className="text-xl font-bold text-red-500 sm:text-3xl">
                         {nombre}
                     </h2>
-                    <p className="mt-2 text-sm text-gray-300 sm:text-base">
-                        Código: {codigo}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-300 sm:text-base">
-                        Descripción: {descripcion || "Sin descripción"}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-300 sm:text-base">
-                        Estado: {estado.replaceAll("_", " ")}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-300 sm:text-base">
-                        Nivel de confidencialidad: {nivelSecreto}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-300 sm:text-base">
-                        Presupuesto: {presupuestoFormateado}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-300 sm:text-base">
-                        Fecha de inicio: {fechaInicio.toLocaleDateString("es-ES")}
-                    </p>
-                    <p className="mt-2 text-sm text-gray-300 sm:text-base">
-                        Fecha de fin: {fechaFin ? fechaFin.toLocaleDateString("es-ES") : "Sin fecha de fin"}
-                    </p>
+                    <dl className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        <DetalleDato etiqueta="Código" tema="rojo">
+                            {codigo}
+                        </DetalleDato>
+                        <DetalleDato etiqueta="Descripción" tema="rojo">
+                            {descripcion}
+                        </DetalleDato>
+                        <DetalleDato
+                            etiqueta="Estado del proyecto"
+                            tema="rojo"
+                            estado={estadoProyecto}
+                        >
+                            {estado.replaceAll("_", " ")}
+                        </DetalleDato>
+                        <DetalleDato etiqueta="Confidencialidad" tema="rojo">
+                            {nivelSecreto}
+                        </DetalleDato>
+                        <DetalleDato etiqueta="Presupuesto" tema="rojo">
+                            {presupuestoFormateado}
+                        </DetalleDato>
+                        <DetalleDato etiqueta="Fecha de inicio" tema="rojo">
+                            {fechaInicio.toLocaleDateString("es-ES")}
+                        </DetalleDato>
+                        <DetalleDato etiqueta="Fecha de fin" tema="rojo">
+                            {fechaFin?.toLocaleDateString("es-ES") || "Sin fecha de fin"}
+                        </DetalleDato>
+                    </dl>
                 </section>
             </div>
 

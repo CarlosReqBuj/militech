@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import Anterior from "@/components/BotonFlechaAnterior";
+import DetalleDato from "@/components/DetalleDato";
 import ListaVehiculos from "@/components/vehiculos/ListaVehiculos";
 import { CardDepartamento } from "@/components/departamentos/CardDepartamento";
 import BotonEliminarEmpleado from "@/components/empleados/BotonEliminarEmpleado";
@@ -141,27 +142,26 @@ async function InfoEmpleado({ params }) {
             </div>
             <div>
                 <section className="self-start min-w-0 rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
-                    <h2 className=" text-xl sm:text-3xl font-bold text-yellow-300">
+                    <h2 className="text-xl font-bold text-yellow-300 sm:text-3xl">
                         {nombre} {apellidos}
                     </h2>
-                    <p className="mt-2 text-sm sm:text-base text-gray-300">
-                        Alias: {alias}
-                    </p>
-                    <p className="mt-2 text-sm sm:text-base text-gray-300">
-                        Cargo: {cargo.nombre}
-                    </p>
-                    <p className="mt-2 text-sm sm:text-base text-gray-300">
-                        email: {email}
-                    </p>
-                    <p className="mt-2 text-sm sm:text-base text-gray-300">
-                        Salario anual: {salario.toString()} edis
-                    </p>
-                    <p className="mt-2 text-sm sm:text-base text-gray-300">
-                        Fecha de alta: {fechaAlta.toLocaleDateString("es-ES")}
-                    </p>
-                    <p className="mt-2 text-sm sm:text-base text-gray-300">
-                        Estado: {activo ? "activo" : "inactivo"}
-                    </p>
+                    <dl className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        <DetalleDato etiqueta="Alias">{alias}</DetalleDato>
+                        <DetalleDato etiqueta="Cargo">{cargo.nombre}</DetalleDato>
+                        <DetalleDato etiqueta="Correo electrónico">{email}</DetalleDato>
+                        <DetalleDato etiqueta="Salario anual">
+                            {`${salario.toString()} edis`}
+                        </DetalleDato>
+                        <DetalleDato etiqueta="Fecha de alta">
+                            {fechaAlta.toLocaleDateString("es-ES")}
+                        </DetalleDato>
+                        <DetalleDato
+                            etiqueta="Estado laboral"
+                            estado={activo ? "correcto" : "error"}
+                        >
+                            {activo ? "Activo" : "Inactivo"}
+                        </DetalleDato>
+                    </dl>
                 </section>
             </div>
 

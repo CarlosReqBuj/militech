@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
+import DetalleDato from "@/components/DetalleDato";
 import ListaEmpleados from "@/components/empleados/ListaEmpleados";
 import ListaVehiculos from "@/components/vehiculos/ListaVehiculos";
 import { prisma } from "@/lib/prisma";
@@ -77,14 +78,16 @@ async function InfoDepartamento({ params }) {
 
     return (
         <div className="flex w-full flex-col gap-6 sm:gap-8">
-            <div className="text-center sm:text-left">
-                <h2 className="text-center text-xl sm:text-3xl font-bold text-yellow-300">
+            <section className="rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
+                <h2 className="text-center text-xl font-bold text-yellow-300 sm:text-3xl">
                     {nombre}
                 </h2>
-                <p className="text-center mt-2 text-sm sm:text-base text-gray-300">
-                    {descripcion}
-                </p>
-            </div>
+                <dl className="mt-4 grid grid-cols-1 gap-3">
+                    <DetalleDato etiqueta="Descripción">
+                        {descripcion}
+                    </DetalleDato>
+                </dl>
+            </section>
 
             <div className="grid grid-cols-1 gap-20 lg:grid-cols-2 lg:gap-8">
                 <section className="min-w-0 overflow-x-auto rounded-xl border-4 border-yellow-300 p-3 sm:p-4">

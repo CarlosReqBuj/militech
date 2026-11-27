@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import Anterior from "@/components/BotonFlechaAnterior";
+import DetalleDato from "@/components/DetalleDato";
 import { prisma } from "@/lib/prisma";
 import ListaEmpleados from "@/components/empleados/ListaEmpleados";
 import { CardDepartamento } from "@/components/departamentos/CardDepartamento";
@@ -122,23 +123,22 @@ async function InfoVehiculo({ params }) {
             </div>
 
             <div>
-                <section className="flex w-full min-w-0 items-center gap-2 self-start rounded-xl border-4 border-yellow-300 p-3 sm:p-4">
-                    <div className="min-w-0">
+                <section className="flex w-full min-w-0 flex-col gap-4 self-start rounded-xl border-4 border-yellow-300 p-3 sm:flex-row sm:items-start sm:p-4">
+                    <div className="min-w-0 flex-1">
                         <h2 className="text-xl font-bold text-yellow-300 sm:text-3xl">
                             {matricula}
                         </h2>
-                        <p className="mt-2 text-sm text-gray-300 sm:text-base">
-                            Marca: {marca}
-                        </p>
-                        <p className="mt-2 text-sm text-gray-300 sm:text-base">
-                            Modelo: {modelo}
-                        </p>
-                        <p className="mt-2 text-sm text-gray-300 sm:text-base">
-                            Tipo: {tipo}
-                        </p>
-                        <p className="mt-2 text-sm text-gray-300 sm:text-base">
-                            Estado: {operativo ? "operativo" : "no disponible"}
-                        </p>
+                        <dl className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                            <DetalleDato etiqueta="Marca">{marca}</DetalleDato>
+                            <DetalleDato etiqueta="Modelo">{modelo}</DetalleDato>
+                            <DetalleDato etiqueta="Tipo de vehículo">{tipo}</DetalleDato>
+                            <DetalleDato
+                                etiqueta="Estado operativo"
+                                estado={operativo ? "correcto" : "error"}
+                            >
+                                {operativo ? "Operativo" : "No disponible"}
+                            </DetalleDato>
+                        </dl>
                     </div>
 
                     {foto && (
@@ -147,7 +147,7 @@ async function InfoVehiculo({ params }) {
                                 <img
                                     src={foto}
                                     alt="Foto del vehículo"
-                                    className="h-24 w-24 shrink-0 cursor-zoom-in rounded-lg object-contain sm:h-40 sm:w-40"
+                                    className="h-32 w-full shrink-0 cursor-zoom-in rounded-lg border border-yellow-300/20 bg-black/30 object-contain sm:h-40 sm:w-40"
                                 />
                             }
                         >
